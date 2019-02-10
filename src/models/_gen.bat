@@ -1,0 +1,1 @@
+node E:\code\ts\schemats\bin\schemats.js generate -c mysql://root:url977782@123.207.28.107/moshi  -o _db.ts
