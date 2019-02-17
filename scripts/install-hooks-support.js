@@ -1,12 +1,23 @@
 const fs = require("fs");
 
-const files = fs.readdirSync("oss-with-hooks");
+let files = fs.readdirSync("for-hooks/oss/");
 
 console.log("copy files:", files);
 
 for (let file of files) {
   fs.copyFileSync(
-    "oss-with-hooks/" + file,
+    "for-hooks/oss/" + file,
     "node_modules/react-native/Libraries/Renderer/oss/" + file
+  );
+}
+
+files = fs.readdirSync("for-hooks/shims/");
+
+console.log("copy files:", files);
+
+for (let file of files) {
+  fs.copyFileSync(
+    "for-hooks/shims/" + file,
+    "node_modules/react-native/Libraries/Renderer/shims/" + file
   );
 }

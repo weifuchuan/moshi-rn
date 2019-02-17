@@ -1,15 +1,10 @@
 import React from 'react';
-import {
-  WebViewProps,
-  WebView as __WebView,
-  NativeSyntheticEvent,
-  WebViewMessageEventData, 
-} from 'react-native';
-const _WebView = __WebView;
+import { NativeSyntheticEvent, WebViewMessageEventData } from 'react-native';
+import { WebView as _WebView, WebViewSharedProps } from 'react-native-webview';
 
-export interface Props extends WebViewProps {
+export interface Props extends WebViewSharedProps {
   handler?: string;
-  on?: (payload: any) => Promise<any>;
+  on?: (payload: any) => Promise<any>; 
 }
 
 export default class WebView extends React.Component<Props> {
@@ -34,8 +29,8 @@ export default class WebView extends React.Component<Props> {
       }
     });
   };
-  private _webview: __WebView | null = null;
-  get webview(): __WebView {
+  private _webview: _WebView | null = null;
+  get webview(): _WebView {
     return this._webview!;
   }
   private onMessage = async (
@@ -60,7 +55,7 @@ export default class WebView extends React.Component<Props> {
     return (
       <_WebView
         {...this.props}
-        mixedContentMode={'compatibility'}
+        mixedContentMode={'always'}
         {...{ thirdPartyCookiesEnabled: true }}
         javaScriptEnabled={true}
         domStorageEnabled={true}

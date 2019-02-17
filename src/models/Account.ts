@@ -87,6 +87,12 @@ export default class Account implements IAccount {
     return resp.data;
   }
 
+  static async logout(){    
+    try {
+      await GET('/logout');
+    } catch (e) {}
+  }
+
   /**
    * Constants
    */

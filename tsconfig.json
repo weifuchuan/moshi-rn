@@ -1,23 +1,27 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "allowJs": false,
+    "checkJs": false,  
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "isolatedModules": false,
-    "jsx": "react",
+    "jsx": "react-native",
     "lib": ["es6","dom"],
     "moduleResolution": "node",
     "noEmit": true,
+    "resolveJsonModule":true,
     "strict": true,
     "target": "esnext",
-    "checkJs": true,  
+    "removeComments": true,
     "experimentalDecorators": true, 
     "skipLibCheck": true,
+    "declaration": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"], 
       "*":["types/*"]
     }
   },
-  "exclude": ["node_modules", "babel.config.js"]
+  "exclude": ["node_modules", "babel.config.js"],
+  "include": ["src","types"]
 }

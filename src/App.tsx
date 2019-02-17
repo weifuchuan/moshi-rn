@@ -1,34 +1,25 @@
-import React, { Component, useReducer, useContext } from 'react';
-import { Platform, StyleSheet, Text, View, Button } from 'react-native';
-import {
-  Scene,
-  Router,
-  Actions,
-  Reducer,
-  ActionConst,
-  Overlay,
-  Tabs,
-  Modal,
-  Drawer,
-  Stack,
-  Lightbox
-} from 'react-native-router-flux';
-import store, { StoreContext } from './store';
+import { Provider as AntdRNProvider } from '@ant-design/react-native';
+import React, { useContext, Component } from 'react';
+import { Platform } from 'react-native';
+import { Drawer, Modal, Router, Scene, Tabs } from 'react-native-router-flux';
+import HomeBottomNavigation from './components/HomeBottomNavigation';
+import HomeDrawer from './components/HomeDrawer';
+import { packToClassComponent } from './kit/packToClassComponent';
+import CourseIntro from './pages/CourseIntro';
+import CourseList from './pages/CourseList';
+import HomeClassroom from './pages/HomeClassroom';
+import HomeExplore from './pages/HomeExplore';
+import HomeLearn from './pages/HomeLearn';
 import Login from './pages/Login';
 import Reg from './pages/Reg';
-import Routes from './Routes';
-import ThemeContext, { defaultThemes } from './themes';
-import { Provider as AntdRNProvider } from '@ant-design/react-native';
-import HomeDrawer from './components/HomeDrawer';
-import HomeExplore from './pages/HomeExplore';
-import HomeClassroom from './pages/HomeClassroom';
-import HomeLearn from './pages/HomeLearn';
-import HomeMy from './pages/HomeMy';
-import HomeBottomNavigation from './components/HomeBottomNavigation';
 import Settings from './pages/Settings';
-import { packToClassComponent } from './kit/packToClassComponent';
+import store, { StoreContext } from './store';
+import ThemeContext, { defaultThemes } from './themes';
+import Subscribe from './pages/Subscribe';
+import Pay from './pages/Pay';
 import Course from './pages/Course';
-import CourseList from './pages/CourseList';
+import Article from './pages/Article/index';
+import ArticleComment from './pages/ArticleComment';
 const { StackViewStyleInterpolator } = require('react-navigation-stack');
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -58,7 +49,7 @@ export default packToClassComponent(function App() {
                 drawerWidth={theme.distances.drawerWidth}
               >
                 <Tabs
-                  key="homeStack"
+                  key="homeTab" 
                   tabBarPosition="bottom"
                   tabBarComponent={HomeBottomNavigation}
                 >
@@ -90,8 +81,13 @@ export default packToClassComponent(function App() {
               <Scene key={'login'} component={Login} />
               <Scene key={'reg'} component={Reg} />
               <Scene key={'settings'} component={Settings} />
-              <Scene key="course" component={Course} />
+              <Scene key={'course'} component={Course} />
+              <Scene key="courseIntro" component={CourseIntro} />
               <Scene key="courseList" component={CourseList} />
+              <Scene key={'subscribe'} component={Subscribe} />
+              <Scene key={'pay'} component={Pay} />
+              <Scene key={"article"} component={Article} />
+              <Scene key={"articleComment"} component={ArticleComment} />
             </Modal>
           </Router>
         </StoreContext.Provider>

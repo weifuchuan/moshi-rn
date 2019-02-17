@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, ViewStyle, Image } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, Image, AppRegistry, BackHandler } from 'react-native';
 import {
   Drawer,
   Avatar,
@@ -11,12 +11,13 @@ import { StoreContext } from '@/store';
 import { useObserver, observer } from 'mobx-react-lite';
 import Routes from '@/Routes';
 import { SCREEN_WIDTH } from '@/kit';
-import { FAKE_ACCOUNT } from '@/models/Account';
+import Account, { FAKE_ACCOUNT } from '@/models/Account';
 import Touchable from './Touchable';
 import { ActionSheet } from '@ant-design/react-native';
 import { SCREEN_HEIGHT } from '../kit/index';
 import ThemeContext from '@/themes';
 import { defaultRealPicture } from '@/models/Course';
+import { GET } from '@/kit/req';
 
 export default observer(function HomeDrawer() {
   const store = useContext(StoreContext);
@@ -69,11 +70,18 @@ export default observer(function HomeDrawer() {
                   onRightElementPress: () => {
                     ActionSheet.showActionSheetWithOptions(
                       {
-                        options: [ '更换头像', '修改密码', '退出登录', '取消' ],
+                        options: [ '退出登录', '退出APP', '取消' ],
                         cancelButtonIndex: 3,
                         destructiveButtonIndex: 2
                       },
-                      (i) => {}
+                      async (i) => {
+                        if (i === 0) {
+                          await Account.logout();
+                          store.me = null; 
+                        }else if(i===1){
+                          BackHandler.exitApp();
+                        }
+                      }
                     );
                   }
                 } as ListItemProps

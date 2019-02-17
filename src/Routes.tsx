@@ -1,4 +1,7 @@
 import { Actions } from 'react-native-router-flux';
+import { ICourse } from '@/models/Course';
+import { ISubscription } from './models/Subscription';
+import { IArticle, IArticleComment, ArticleComment } from '@/models/Article';
 
 const Routes = {
   login() {
@@ -16,14 +19,32 @@ const Routes = {
   learn() {
     Actions.push('learn');
   },
-  // my(){
-  //   Actions.push("my")
-  // },
   settings() {
     Actions.push('settings');
   },
-  course(id: number) {
-    Actions.push('course', { id });
+  article(article: IArticle, list?: IArticle[]) {
+    Actions.push('article', { article, list });
+  },
+  articleComment(
+    article: IArticle,
+    onCommentSuccess: (comment: ArticleComment) => void
+  ) {
+    Actions.push('articleComment', { article, onCommentSuccess });
+  },
+  course(course: ICourse) {
+    Actions.push('course', { course: course });
+  },
+  courseIntro(course: ICourse) {
+    Actions.push('courseIntro', { course: course });
+  },
+  courseList(type: 'column' | 'video') {
+    Actions.push('courseList', { type });
+  },
+  subscribe(course: ICourse) {
+    Actions.push('subscribe', { course: course });
+  },
+  pay(subscription: ISubscription, timeout: number) {
+    Actions.push('pay', { subscription, timeout });
   }
 };
 

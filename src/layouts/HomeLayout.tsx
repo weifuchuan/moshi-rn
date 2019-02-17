@@ -4,16 +4,23 @@ import useObject from '@/hooks/useObject';
 import { SCREEN_WIDTH } from '@/kit';
 import Routes from '@/Routes';
 import ThemeContext from '@/themes';
-import React, { FunctionComponent, useCallback, useContext } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useState
+} from 'react';
 import {
   Animated,
   ScrollView,
   StyleSheet,
   Text,
   View,
-  ViewStyle
+  ViewStyle,
+  RefreshControl
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StoreContext } from '@/store';
 
 interface Props {
   title: string;
@@ -21,9 +28,11 @@ interface Props {
 
 const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
   const theme = useContext(ThemeContext);
+  const store = useContext(StoreContext);
   const floatTop = useAnimatedValue(-40);
   const lastOffsetY = useObject({ value: 0 });
   const floatTopbarState = useObject({ show: false });
+  const [ refreshing, setRefreshing ] = useState(false);
 
   const showFloatTopbar = useCallback(
     () => {
@@ -43,23 +52,35 @@ const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
   return (
     <View style={[ styles.container ]}>
       <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              setRefreshing(true);
+              try {
+                await store.explore();
+              } catch (e) {}
+              setRefreshing(false);
+            }}
+          />
+        }
         style={[
           styles.container,
           { backgroundColor: theme.colors.BACKGROUND }
         ]}
+        showsVerticalScrollIndicator={false}
         onScroll={(e) => {
           const y = e.nativeEvent.contentOffset.y;
-          console.info(y); 
           if (y - lastOffsetY.value > 0 && y > 40 && !floatTopbarState.show) {
             showFloatTopbar();
-            floatTopbarState.show = true; 
+            floatTopbarState.show = true;
           } else if (
             y - lastOffsetY.value < 0 &&
-            y < 40+48 &&
+            y < 40 + 48 &&
             floatTopbarState.show
           ) {
             hideFloatTopbar();
-            floatTopbarState.show = false; 
+            floatTopbarState.show = false;
           }
           lastOffsetY.value = y;
         }}
