@@ -11,7 +11,7 @@ import { StoreContext } from '@/store';
 import ThemeContext from '@/themes';
 import CourseModel from '@/models/Course';
 import { toJS, runInAction, action } from 'mobx';
-import { Toast } from '@ant-design/react-native';
+import { Toast, Tabs } from '@ant-design/react-native';
 import ArticleList from '@/components/ArticleList';
 import Article, { IArticle } from '@/models/Article';
 import { Page } from '@/models/Page';
@@ -106,16 +106,23 @@ const Course: FunctionComponent<
   return (
     <BackableLayout title={state.course.name}>
       <View style={styles.container}>
-        <ArticleList
-          list={state.articleList.slice()}
-          page={state.articlePage}
-          cending={state.cending}
-          onChangeCending={changeCending}
-          onRefresh={async () => {
-            await fetchCourseData();
-          }}
-          onLoadMore={loadMore}
-        />
+        <Tabs tabs={[ { title: '文章' }, { title: 'Issue' } ]}>
+          <View>
+            <ArticleList
+              list={state.articleList.slice()}
+              page={state.articlePage}
+              cending={state.cending}
+              onChangeCending={changeCending}
+              onRefresh={async () => {
+                await fetchCourseData();
+              }}
+              onLoadMore={loadMore}
+            />
+          </View>
+          <View>
+            <Text>issue</Text>
+          </View>
+        </Tabs>
       </View>
     </BackableLayout>
   );

@@ -11,6 +11,7 @@ export interface ICourse extends _ICourse {
   subscribed?: boolean;
   personalProfile?: string;
   publishedCount?:number;
+  learnedCount?:number;
 }
 
 export default class Course implements ICourse {

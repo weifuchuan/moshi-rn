@@ -19,20 +19,20 @@ interface Props {
   courses: ICourse[];
   courseType: string;
   onViewAll: () => void;
-  containerStyle?:ViewStyle; 
+  containerStyle?: ViewStyle;
 }
 
 const CoursesPanel: FunctionComponent<
   Props
-> = observer(({ courseType, courses, onViewAll,containerStyle }) => {
+> = observer(({ courseType, courses, onViewAll, containerStyle }) => {
   return (
-    <View style={[ styles.container,containerStyle ]}>
+    <View style={[ styles.container, containerStyle ]}>
       <View style={styles.topbar}>
         <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>
           {courseType}
         </Text>
         <Text style={{ fontSize: 14 }} onPress={onViewAll}>
-          查看全部
+          {/* 查看全部 */}
         </Text>
       </View>
       <View style={styles.list}>
@@ -46,9 +46,7 @@ const CoursesPanel: FunctionComponent<
             <Touchable
               key={course.id}
               onPress={() => {
-                if (course.subscribed) {
-                  Routes.course(course);
-                } else Routes.courseIntro(course);
+                Routes.course(course);
               }}
             >
               <View style={styles.item}>
@@ -76,7 +74,7 @@ const CoursesPanel: FunctionComponent<
                   </View>
                   <View>
                     <Text style={{ fontSize: 12 }}>
-                      {course.lectureCount}讲 | {course.buyerCount}人已学习
+                      {course.lectureCount}讲 | 已学习{course.learnedCount || 0}讲
                     </Text>
                   </View>
                   <View style={styles.priceBar}>

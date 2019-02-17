@@ -21,8 +21,8 @@ import React, {
 import { Animated, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnyAction } from '../../components/WebView2';
-import html from './article.html.raw';
-import WebView3 from '@/components/WebView3';
+import html from './article.html.raw'; 
+import { Tabs } from '@ant-design/react-native';
 
 interface Props {
   article: IArticle;
@@ -67,7 +67,9 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
             next: next ? next.title : undefined
           }
         });
-      } catch (error) {}
+      } catch (error) {
+        console.warn(error); 
+      }
     })();
   }, []);
 
@@ -144,6 +146,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       Routes.articleComment(article, (comment) => {
         Routes.pop();
         state.article.comments.unshift(comment);
+        comment.avatar=staticBaseUrl+comment.avatar; 
         wvRef.current!.post({ action: 'addComment', payload: comment });
       });
     else Routes.login();
@@ -205,11 +208,12 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       }}
     >
       <View>
-        <WebView2
+
+          <WebView2
           ref={wvRef}
           source={
-              { uri: 'http://192.168.1.18:3001/article.html' }
-          // { html, baseUrl: '' }
+          //    { uri: 'http://192.168.1.18:3001/article.html' }
+           { html, baseUrl: '' }
         }
           scalesPageToFit={false}
           on={onMsg}
