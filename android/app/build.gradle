@@ -111,7 +111,7 @@ android {
         applicationId "com.moshi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
+        versionCode 5
         versionName getNpmVersion()
     }
     signingConfigs {
@@ -155,7 +155,6 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-fs')
     implementation project(':react-native-webview')
     implementation project(':rn-fetch-blob')
