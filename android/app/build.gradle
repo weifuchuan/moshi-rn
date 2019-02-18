@@ -71,6 +71,10 @@ import com.android.build.OutputFile
  *   extraPackagerArgs: []
  * ]
  */
+ 
+import groovy.json.JsonSlurper
+import java.util.regex.Pattern
+
 
 def getNpmVersion() {
     def inputFile = new File("../package.json")
@@ -107,8 +111,8 @@ android {
         applicationId "com.moshi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName getNpmVersion()
     }
     signingConfigs {
         release {
@@ -169,4 +173,23 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
+}
+
+task('increaseVersionCode') << {
+    def buildFile = file("build.gradle")
+    def pattern = Pattern.compile("versionCode(\\s+\\d+)")
+    def buildText = buildFile.getText()
+    def matcher = pattern.matcher(buildText)
+    matcher.find()
+    def versionCode = android.defaultConfig.versionCode
+    def buildContent = matcher.replaceAll("versionCode " + ++versionCode)
+    buildFile.write(buildContent)
+
+    System.out.println("Incrementing Version Code ===> " + versionCode)
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name == 'generateReleaseBuildConfig') {
+        task.dependsOn 'increaseVersionCode'
+    }
 }
