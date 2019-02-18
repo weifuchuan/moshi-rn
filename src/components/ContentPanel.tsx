@@ -28,7 +28,7 @@ export default function ContentPanel({ content, type, ...otherProps }: Props) {
     },
     [ content, type ]
   );
-
+  
   return (
     <WebView2
       {...otherProps}
@@ -42,6 +42,7 @@ export default function ContentPanel({ content, type, ...otherProps }: Props) {
         { html: rawHtml, baseUrl: '' }
       // { uri: 'http://192.168.1.18:3001/content.html' }
       }
+      originWhitelist={[]}
     />
   );
 }
