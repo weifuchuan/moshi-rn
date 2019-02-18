@@ -59,6 +59,7 @@ export default class WebView3 extends React.Component<Props> {
     return this._webview!;
   }
   private onMessage = async (event: NativeSyntheticEvent<WebViewMessage>) => {
+    console.warn(event); 
     if (event.nativeEvent.data.trim() === 'ready') {
       this.ready = true;
       this._webview!.postMessage('ready');

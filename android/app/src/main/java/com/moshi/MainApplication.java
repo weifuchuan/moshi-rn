@@ -15,9 +15,9 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-// import com.jordansexton.react.crosswalk.webview.CrosswalkWebViewPackage;
+import com.jordansexton.react.crosswalk.webview.CrosswalkWebViewPackage;
 
-// import org.xwalk.core.XWalkView;
+import org.xwalk.core.XWalkView;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -34,7 +34,8 @@ public class MainApplication extends Application implements ReactApplication {
                     new RNFSPackage(),
                     new RNCWebViewPackage(),
                     new RNFetchBlobPackage(),
-                    new VectorIconsPackage()
+                    new VectorIconsPackage(),
+                    new CrosswalkWebViewPackage()
             );
         }
 
@@ -53,11 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
     public void onCreate() {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
-        // #xwalk
-        // String mode = System.getenv("mode");
-        // System.out.println("mode = " + mode);
-        // if (mode != null && mode.equals("DEV"))
-        //     new XWalkView(this).onDestroy();  // just add this line for RN dev mode,and release mode you can delete it
+        // #xwalk 
+        new XWalkView(this).onDestroy();  // just add this line for RN dev mode,and release mode you can delete it
         // /xwalk
     }
 }

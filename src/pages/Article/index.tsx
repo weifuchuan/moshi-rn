@@ -21,9 +21,10 @@ import React, {
 import { Animated, StyleSheet, Text, View, ViewStyle } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnyAction } from '../../components/WebView2';
-import html from './article.html.raw'; 
+import html from './article.html.raw';
 import { Tabs } from '@ant-design/react-native';
 import { patchAvatar } from '@/models/Account';
+import WebView3 from '@/components/WebView3';
 
 interface Props {
   article: IArticle;
@@ -56,7 +57,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           );
           const contentHtmls = await Promise.all(contents);
           state.article.comments.forEach((c, i) => {
-            patchAvatar(c);  
+            patchAvatar(c);
             c.content = contentHtmls[i];
           });
         }
@@ -69,7 +70,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           }
         });
       } catch (error) {
-        console.warn(error); 
+        console.warn(error);
       }
     })();
   }, []);
@@ -147,7 +148,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       Routes.articleComment(article, (comment) => {
         Routes.pop();
         state.article.comments.unshift(comment);
-        comment.avatar=staticBaseUrl+comment.avatar; 
+        comment.avatar = staticBaseUrl + comment.avatar;
         wvRef.current!.post({ action: 'addComment', payload: comment });
       });
     else Routes.login();
@@ -209,16 +210,14 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       }}
     >
       <View>
-
-          <WebView2
-          ref={wvRef}
+        <WebView3
+          ref={wvRef as any}
           source={
-          //    { uri: 'http://192.168.1.18:3001/article.html' }
-           { html, baseUrl: '' }
+               { uri: 'http://192.168.1.18:3001/article.html' }
+        //  { html, baseUrl: '' } as any
         }
           scalesPageToFit={false}
-          on={onMsg}
-          overScrollMode="content"
+          on={onMsg} 
         />
       </View>
     </BackableFloatLayout>

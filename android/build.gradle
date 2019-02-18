@@ -30,9 +30,9 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         // #xwalk
-        // flatDir {        
-        //     dirs 'libs'  
-        // }        
+        flatDir {        
+            dirs 'libs'  
+        }        
         // /xwalk        
     }
 }
