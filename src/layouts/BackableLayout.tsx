@@ -1,26 +1,15 @@
 import Touchable from '@/components/Touchable';
-import useAnimatedValue from '@/hooks/useAnimatedValue';
-import useObject from '@/hooks/useObject';
-import { SCREEN_WIDTH } from '@/kit';
-import Routes from '@/Routes';
-import ThemeContext from '@/themes';
-import React, { FunctionComponent, useCallback, useContext } from 'react';
-import {
-  Animated,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle
-} from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import isUndefOrNull from '@/kit/functions/isUndefOrNull';
 import getPlatformElevation from '@/kit/styles/getPlatformElevation';
+import Routes from '@/Routes';
+import React, { FunctionComponent } from 'react';
+import { StyleSheet, Text, View, ViewStyle } from 'react-native';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 interface Props {
   title?: string;
-  center?: React.ReactElement<any>;
-  right?: React.ReactElement<any>;
+  center?: React.ReactNode;
+  right?: React.ReactNode;
   onBack?: () => void;
 }
 

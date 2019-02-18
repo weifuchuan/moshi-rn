@@ -15,6 +15,7 @@ import Routes from '@/Routes';
 import isUndefOrNull from '@/kit/functions/isUndefOrNull';
 import Entypo from 'react-native-vector-icons/Entypo';
 import ThemeContext from '@/themes';
+import { patchAvatar } from '@/models/Account';
 
 interface Props {
 	course: ICourse;
@@ -23,9 +24,9 @@ interface Props {
 const CoursesPanel: FunctionComponent<Props> = ({course}) => {
 	const theme = useContext(ThemeContext);
 	let avatarUri = course.realPicture || course.avatar || defaultRealPicture;
-	if (__DEV__ && !avatarUri.startsWith('data:')) {
-		avatarUri = staticBaseUrl + avatarUri;
-	}
+	const temp = {avatar:avatarUri}
+	patchAvatar(temp); 
+	avatarUri = temp.avatar; 
 	return (
 		<Touchable
 			key={course.id}

@@ -1,22 +1,13 @@
-import React, { FunctionComponent, useContext, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  ViewStyle,
-  Text,
-  ActivityIndicator
-} from 'react-native';
-import { observer, useObservable } from 'mobx-react-lite';
-import HomeLayout from '@/layouts/HomeLayout';
-import { StoreContext } from '@/store';
 import Separator from '@/components/Separator';
-import CoursesPanel from './CoursesPanel';
-import { ICourse } from '@/models/Course';
-import ThemeContext from '@/themes';
-import replaceArray from '@/kit/functions/replaceArray';
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from '@/kit';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '@/kit';
+import HomeLayout from '@/layouts/HomeLayout';
 import Routes from '@/Routes';
-import { runInAction, autorun } from 'mobx';
+import { StoreContext } from '@/store';
+import ThemeContext from '@/themes';
+import { observer } from 'mobx-react-lite';
+import React, { FunctionComponent, useContext } from 'react';
+import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
+import CoursesPanel from './CoursesPanel';
 
 interface Props {}
 
@@ -43,11 +34,6 @@ const HomeClassroom: FunctionComponent<Props> = () => {
           }}
         />
       </HomeLayout>
-      {store.explored ? null : (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color={theme.colors.LOADING_BLUE} />
-        </View>
-      )}
     </View>
   );
 };

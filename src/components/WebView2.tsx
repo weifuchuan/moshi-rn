@@ -15,6 +15,8 @@ export interface AnyAction {
 export interface Props extends WebViewSharedProps {
   on?: (payload: any) => Promise<any>;
   wvRef?: (instance: WebView | null) => void;
+  minBodyHeight?: string;
+  notAutoHeight?: boolean;
 }
 
 export default class WebView2 extends React.Component<Props> {
@@ -65,6 +67,13 @@ export default class WebView2 extends React.Component<Props> {
     if (event.nativeEvent.data.trim() === 'ready') {
       this.ready = true;
       this._webview!.postMessage('ready');
+      this.props.minBodyHeight &&
+        this._webview!.postMessage(
+          JSON.stringify({
+            action: 'minBodyHeight',
+            payload: this.props.minBodyHeight
+          })
+        );
       this.runPending();
       return;
     }
@@ -102,13 +111,16 @@ export default class WebView2 extends React.Component<Props> {
           (this._webview = w), this.props.wvRef && this.props.wvRef(w)
         )}
         onMessage={this.onMessage}
-        style={[ this.props.style, { height: this.state.height } ]}
+        style={[
+          this.props.style,
+          { height: !this.props.notAutoHeight ? this.state.height : '100%' }
+        ]}
         allowsInlineMediaPlayback={true}
         dataDetectorTypes={'all'}
         geolocationEnabled={true}
         allowUniversalAccessFromFileURLs={true}
         allowFileAccess={true}
-        cacheEnabled={true} 
+        cacheEnabled={true}
       />
     );
   }

@@ -14,6 +14,7 @@ import { staticBaseUrl } from '@/kit/req';
 import Touchable from '@/components/Touchable';
 import Routes from '@/Routes';
 import isUndefOrNull from '@/kit/functions/isUndefOrNull';
+import { patchAvatar } from '@/models/Account';
 
 interface Props {
   courses: ICourse[];
@@ -38,11 +39,10 @@ const CoursesPanel: FunctionComponent<Props> = ({
       </View>
       <View style={styles.list}>
         {courses.map((course) => {
-          let avatarUri =
-            course.realPicture || course.avatar || defaultRealPicture;
-          if (__DEV__ && !avatarUri.startsWith('data:')) {
-            avatarUri = staticBaseUrl + avatarUri;
-          }
+         let avatarUri = course.realPicture || course.avatar || defaultRealPicture;
+         const temp = {avatar:avatarUri}
+         patchAvatar(temp); 
+         avatarUri = temp.avatar; 
           return (
             <Touchable
               key={course.id}

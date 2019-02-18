@@ -24,8 +24,8 @@ export class Store {
   }
 
   async explore() {
-    if(__DEV__){
-      GET("/srv/v1/course/clear")
+    if (__DEV__) {
+      GET('/srv/v1/course/clear');
     }
     const resp = await retryDo(
       async () =>
@@ -57,6 +57,9 @@ Account.probeLoggedAccount()
   })
   .catch((err) => {
     Toast.fail('网络错误！');
+  })
+  .then(() => {
+    bus.emit('fullLoading', false);
   });
 
 export const StoreContext = React.createContext(store);

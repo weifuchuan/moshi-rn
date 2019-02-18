@@ -62,3 +62,4 @@ android/gradle/wrapper/gradle-4.7-all.zip
 
 # webapp
 webapp/node_modules
+android/gradle.properties

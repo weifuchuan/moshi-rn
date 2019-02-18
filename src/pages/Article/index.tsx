@@ -23,6 +23,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { AnyAction } from '../../components/WebView2';
 import html from './article.html.raw'; 
 import { Tabs } from '@ant-design/react-native';
+import { patchAvatar } from '@/models/Account';
 
 interface Props {
   article: IArticle;
@@ -55,7 +56,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           );
           const contentHtmls = await Promise.all(contents);
           state.article.comments.forEach((c, i) => {
-            c.avatar = staticBaseUrl + c.avatar;
+            patchAvatar(c);  
             c.content = contentHtmls[i];
           });
         }

@@ -1,6 +1,6 @@
 import { Provider as AntdRNProvider } from '@ant-design/react-native';
-import React, { useContext, Component } from 'react';
-import { Platform } from 'react-native';
+import React, { useContext, Component, useState, useEffect } from 'react';
+import { Platform, View, ActivityIndicator } from 'react-native';
 import { Drawer, Modal, Router, Scene, Tabs } from 'react-native-router-flux';
 import HomeBottomNavigation from './components/HomeBottomNavigation';
 import HomeDrawer from './components/HomeDrawer';
@@ -20,6 +20,10 @@ import Pay from './pages/Pay';
 import Course from './pages/Course';
 import Article from './pages/Article/index';
 import ArticleComment from './pages/ArticleComment';
+import CreateIssue from './pages/CreateIssue';
+import Issue from './pages/Issue';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from './kit';
+import IssueComment from './pages/IssueComment';
 const { StackViewStyleInterpolator } = require('react-navigation-stack');
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -29,73 +33,106 @@ export default packToClassComponent(function App() {
   const theme = useContext(ThemeContext);
 
   return (
-    <AntdRNProvider>
-      <ThemeContext.Provider value={defaultThemes}>
-        <StoreContext.Provider value={store}>
-          <Router uriPrefix={prefix} backAndroidHandler={() => {}}>
-            <Modal
-              key="modal"
-              initial
-              hideNavBar
-              transitionConfig={transitionConfig}
-            >
-              <Drawer
-                key="homeDrawer"
-                drawerPosition={'left'}
-                contentComponent={HomeDrawer}
-                hideDrawerButton={true}
-                hideNavBar={true}
-                header={() => null}
-                drawerWidth={theme.distances.drawerWidth}
+    <View style={{ flex: 1 }}>
+      <AntdRNProvider>
+        <ThemeContext.Provider value={defaultThemes}>
+          <StoreContext.Provider value={store}>
+            <Router uriPrefix={prefix} backAndroidHandler={() => {}}>
+              <Modal
+                key="modal"
+                initial
+                hideNavBar
+                transitionConfig={transitionConfig}
               >
-                <Tabs
-                  key="homeTab" 
-                  tabBarPosition="bottom"
-                  tabBarComponent={HomeBottomNavigation}
+                <Drawer
+                  key="homeDrawer"
+                  drawerPosition={'left'}
+                  contentComponent={HomeDrawer}
+                  hideDrawerButton={true}
+                  hideNavBar={true}
+                  header={() => null}
+                  drawerWidth={theme.distances.drawerWidth}
                 >
-                  <Scene
-                    initial
-                    key="explore"
-                    component={HomeExplore}
-                    onEnter={() => {
-                      bus.emit('selectHomeBottomNav', 'explore');
-                    }}
-                  />
-                  <Scene
-                    key="classroom"
-                    component={HomeClassroom}
-                    onEnter={() => {
-                      bus.emit('selectHomeBottomNav', 'classroom');
-                    }}
-                  />
-                  <Scene
-                    key="learn"
-                    component={HomeLearn}
-                    onEnter={() => {
-                      bus.emit('selectHomeBottomNav', 'learn');
-                    }}
-                  />
-                  {/* <Scene key="my" component={HomeMy} /> */}
-                </Tabs>
-              </Drawer>
-              <Scene key={'login'} component={Login} />
-              <Scene key={'reg'} component={Reg} />
-              <Scene key={'settings'} component={Settings} />
-              <Scene key={'course'} component={Course} />
-              <Scene key="courseIntro" component={CourseIntro} />
-              <Scene key="courseList" component={CourseList} />
-              <Scene key={'subscribe'} component={Subscribe} />
-              <Scene key={'pay'} component={Pay} />
-              <Scene key={"article"} component={Article} />
-              <Scene key={"articleComment"} component={ArticleComment} />
-            </Modal>
-          </Router>
-        </StoreContext.Provider>
-      </ThemeContext.Provider>
-    </AntdRNProvider>
+                  <Tabs
+                    key="homeTab"
+                    tabBarPosition="bottom"
+                    tabBarComponent={HomeBottomNavigation}
+                  >
+                    <Scene
+                      initial
+                      key="explore"
+                      component={HomeExplore}
+                      onEnter={() => {
+                        bus.emit('selectHomeBottomNav', 'explore');
+                      }}
+                    />
+                    <Scene
+                      key="classroom"
+                      component={HomeClassroom}
+                      onEnter={() => {
+                        bus.emit('selectHomeBottomNav', 'classroom');
+                      }}
+                    />
+                    <Scene
+                      key="learn"
+                      component={HomeLearn}
+                      onEnter={() => {
+                        bus.emit('selectHomeBottomNav', 'learn');
+                      }}
+                    />
+                    {/* <Scene key="my" component={HomeMy} /> */}
+                  </Tabs>
+                </Drawer>
+                <Scene key={'login'} component={Login} />
+                <Scene key={'reg'} component={Reg} />
+                <Scene key={'settings'} component={Settings} />
+                <Scene key={'course'} component={Course} />
+                <Scene key="courseIntro" component={CourseIntro} />
+                <Scene key="courseList" component={CourseList} />
+                <Scene key={'subscribe'} component={Subscribe} />
+                <Scene key={'pay'} component={Pay} />
+                <Scene key={'article'} component={Article} />
+                <Scene key={'articleComment'} component={ArticleComment} />
+                <Scene key={'issue'} component={Issue} />
+                <Scene key={'createIssue'} component={CreateIssue} />
+                <Scene key={'issueComment'} component={IssueComment} />
+              </Modal>
+            </Router>
+          </StoreContext.Provider>
+        </ThemeContext.Provider>
+      </AntdRNProvider>
+      <FullLoading />
+    </View>
   );
 });
 
 const transitionConfig = () => ({
   screenInterpolator: StackViewStyleInterpolator.forFadeFromBottomAndroid
 });
+
+function FullLoading() {
+  const [ loading, setLoading ] = useState(true);
+
+  useEffect(() => {
+    const f = (loading: boolean) => setLoading(loading);
+    bus.addListener('fullLoading', f);
+    return () => {
+      bus.removeListener('fullLoading', f);
+    };
+  }, []);
+  return (
+    <View
+      style={{
+        position: 'absolute',
+        top: loading ? 0 : SCREEN_HEIGHT * 100,
+        right: 0,
+        height: SCREEN_HEIGHT,
+        width: SCREEN_WIDTH,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}
+    >
+      <ActivityIndicator size="large" color={colors.DeepSkyBlue} />
+    </View>
+  );
+}
