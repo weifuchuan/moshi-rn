@@ -27,6 +27,7 @@
     "react-native": "0.58.4",
     "react-native-base64": "^0.0.2",
     "react-native-crosswalk-webview-plus": "^1.2.10",
+    "react-native-device-info": "^0.26.4",
     "react-native-elements": "^1.0.0",
     "react-native-fs": "^2.13.3",
     "react-native-image-crop-picker": "^0.22.0",
