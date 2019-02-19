@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import WebView2 from './WebView2';
+import MoshiWebView from './MoshiWebView';
 import markdownToHtml from '@/kit/functions/markdownToHtml';
 import { WebViewProps } from 'react-native';
 import rawHtml from './content.html.raw'
@@ -10,7 +10,7 @@ interface Props extends WebViewProps {
 }
 
 export default function ContentPanel({ content, type, ...otherProps }: Props) {
-  const webView = useRef<WebView2>(null);
+  const webView = useRef<MoshiWebView>(null);
 
   useEffect(
     () => {
@@ -30,7 +30,7 @@ export default function ContentPanel({ content, type, ...otherProps }: Props) {
   );
   
   return (
-    <WebView2
+    <MoshiWebView
       {...otherProps}
       ref={webView}
       on={async (payload) => {

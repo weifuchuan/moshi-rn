@@ -1,29 +1,29 @@
-import Touchable from '@/components/Touchable';
-import WebView2 from '@/components/WebView2';
-import useAnimatedValue from '@/hooks/useAnimatedValue';
-import useObject from '@/hooks/useObject';
-import { SCREEN_WIDTH } from '@/kit';
-import markdownToHtml from '@/kit/functions/markdownToHtml';
-import { staticBaseUrl } from '@/kit/req';
-import getPlatformElevation from '@/kit/styles/getPlatformElevation';
-import BackableFloatLayout from '@/layouts/BackableFloatLayout';
-import ArticleModel, { IArticle } from '@/models/Article';
-import Routes from '@/Routes';
-import { StoreContext } from '@/store';
-import { observer, useObservable } from 'mobx-react-lite';
+import Touchable from "@/components/Touchable";
+import MoshiWebView from "@/components/MoshiWebView";
+import useAnimatedValue from "@/hooks/useAnimatedValue";
+import useObject from "@/hooks/useObject";
+import { SCREEN_WIDTH } from "@/kit";
+import markdownToHtml from "@/kit/functions/markdownToHtml";
+import { staticBaseUrl } from "@/kit/req";
+import getPlatformElevation from "@/kit/styles/getPlatformElevation";
+import BackableFloatLayout from "@/layouts/BackableFloatLayout";
+import ArticleModel, { IArticle } from "@/models/Article";
+import Routes from "@/Routes";
+import { StoreContext } from "@/store";
+import { observer, useObservable } from "mobx-react-lite";
 import React, {
   FunctionComponent,
   useCallback,
   useContext,
   useEffect,
   useRef
-} from 'react';
-import { Animated, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AnyAction } from '../../components/WebView2';
-import html from './article.html.raw'; 
-import { Tabs } from '@ant-design/react-native';
-import { patchAvatar } from '@/models/Account';
+} from "react";
+import { Animated, StyleSheet, Text, View, ViewStyle } from "react-native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { AnyAction } from "../../components/MoshiWebView";
+import html from "./article.html.raw";
+import { Tabs } from "@ant-design/react-native";
+import { patchAvatar } from "@/models/Account";
 
 interface Props {
   article: IArticle;
@@ -36,7 +36,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
     article: ArticleModel.from(article)
   });
 
-  const wvRef = useRef<WebView2>(null);
+  const wvRef = useRef<MoshiWebView>(null);
 
   useEffect(() => {
     ArticleModel.visit(article.id);
@@ -47,21 +47,21 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           const audioUrl = staticBaseUrl + state.article.audio.resource;
           state.article.audio.resource = audioUrl;
         }
-        if (state.article.contentType === 'md') {
+        if (state.article.contentType === "md") {
           state.article.content = await markdownToHtml(state.article.content);
         }
         if (state.article.comments) {
-          const contents = state.article.comments.map((c) =>
+          const contents = state.article.comments.map(c =>
             markdownToHtml(c.content)
           );
           const contentHtmls = await Promise.all(contents);
           state.article.comments.forEach((c, i) => {
-            patchAvatar(c);  
+            patchAvatar(c);
             c.content = contentHtmls[i];
           });
         }
         wvRef.current!.post<AnyAction>({
-          action: 'load',
+          action: "load",
           payload: {
             article: state.article,
             prev: prev ? prev.title : undefined,
@@ -69,7 +69,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           }
         });
       } catch (error) {
-        console.warn(error); 
+        console.warn(error);
       }
     })();
   }, []);
@@ -77,11 +77,11 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
   let prev: IArticle | undefined = undefined;
   let next: IArticle | undefined = undefined;
   if (list) {
-    let index = list.findIndex((x) => x.id === article.id);
+    let index = list.findIndex(x => x.id === article.id);
     if (index !== -1) {
       let cending =
-        list[0].publishAt! < list[list.length - 1].publishAt! ? 'asc' : 'desc';
-      if (cending === 'asc') {
+        list[0].publishAt! < list[list.length - 1].publishAt! ? "asc" : "desc";
+      if (cending === "asc") {
         prev = index > 0 ? list[index - 1] : undefined;
         next = index < list.length - 1 ? list[index + 1] : undefined;
       } else {
@@ -127,14 +127,14 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
 
   const onMsg = useCallback(async ({ action, payload }: AnyAction) => {
     switch (action) {
-      case 'jump':
-        if (payload === 'prev') {
+      case "jump":
+        if (payload === "prev") {
           Routes.article(prev!, list);
-        } else if (payload === 'next') {
+        } else if (payload === "next") {
           Routes.article(next!, list);
         }
         break;
-      case 'refresh':
+      case "refresh":
         Routes.refresh({ article, list });
         break;
       default:
@@ -144,11 +144,11 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
 
   const comment = useCallback(async () => {
     if (store.me)
-      Routes.articleComment(article, (comment) => {
+      Routes.articleComment(article, comment => {
         Routes.pop();
         state.article.comments.unshift(comment);
-        comment.avatar=staticBaseUrl+comment.avatar; 
-        wvRef.current!.post({ action: 'addComment', payload: comment });
+        comment.avatar = staticBaseUrl + comment.avatar;
+        wvRef.current!.post({ action: "addComment", payload: comment });
       });
     else Routes.login();
   }, []);
@@ -160,11 +160,11 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           <Animated.View
             style={{
               height: animatedHeight,
-              backgroundColor: '#fff',
+              backgroundColor: "#fff",
               width: SCREEN_WIDTH
             }}
           />
-          <Animated.View style={[ styles.bottom, { bottom: animatedBottom } ]}>
+          <Animated.View style={[styles.bottom, { bottom: animatedBottom }]}>
             <Touchable onPress={() => {}}>
               <View style={styles.bottomItem}>
                 <Ionicons
@@ -188,7 +188,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
           </Animated.View>
         </React.Fragment>
       }
-      onScroll={(e) => {
+      onScroll={e => {
         const scrollViewHeight = e.nativeEvent.layoutMeasurement.height;
         const height = e.nativeEvent.contentSize.height;
         const y = e.nativeEvent.contentOffset.y;
@@ -209,13 +209,12 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       }}
     >
       <View>
-
-          <WebView2
+        <MoshiWebView
           ref={wvRef}
           source={
-          //    { uri: 'http://192.168.1.18:3001/article.html' }
-           { html, baseUrl: '' }
-        }
+            //    { uri: 'http://192.168.1.18:3001/article.html' }
+            { html, baseUrl: "" }
+          }
           scalesPageToFit={false}
           on={onMsg}
           overScrollMode="content"
@@ -232,19 +231,19 @@ const styles = StyleSheet.create({
     flex: 1
   } as ViewStyle,
   bottom: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 100,
     left: 0,
     bottom: 0,
     height: 38,
     width: SCREEN_WIDTH,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     ...getPlatformElevation(4),
-    flexDirection: 'row'
+    flexDirection: "row"
   } as ViewStyle,
   bottomItem: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   } as ViewStyle
 });
