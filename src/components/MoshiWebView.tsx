@@ -19,7 +19,7 @@ export interface Props extends WebViewSharedProps {
   notAutoHeight?: boolean;
 }
 
-export default class WebView2 extends React.Component<Props> {
+export default class MoshiWebView extends React.Component<Props> {
   static defaultProps = {
     on: () => Promise.resolve()
   };

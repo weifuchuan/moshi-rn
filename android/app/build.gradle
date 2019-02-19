@@ -163,10 +163,6 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    // #xwalk
-    // implementation (name: "xwalk_core_library-23.53.589.4-arm", ext: "aar")  
-    // implementation project(':CrosswalkWebView')           
-    // /xwalk
 }
 
 // Run this once to be able to run the application with BUCK

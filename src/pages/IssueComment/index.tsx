@@ -8,7 +8,7 @@ import React, {
 import { View, StyleSheet, ViewStyle, Text, BackHandler } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import BackableLayout from '@/layouts/BackableLayout';
-import WebView2, { AnyAction } from '@/components/WebView2';
+import MoshiWebView, { AnyAction } from '@/components/MoshiWebView';
 import html from './article-comment-editor.html.raw';
 import { NavigationScreenProp } from 'react-navigation';
 import Routes from '@/Routes';
@@ -29,7 +29,7 @@ const IssueComment: FunctionComponent<
 > = observer(({ issue, navigation, onCommentSuccess }) => {
   const store = useContext(StoreContext);
   const theme = useContext(ThemeContext);
-  const wv = useRef<WebView2>(null);
+  const wv = useRef<MoshiWebView>(null);
   const lastCtn = useObject({ value: '' });
 
   const onMsg = useCallback(async ({ action, payload }: AnyAction) => {
@@ -93,7 +93,7 @@ const IssueComment: FunctionComponent<
 
   return (
     <BackableLayout title="评论" onBack={onBack}>
-      <WebView2
+      <MoshiWebView
         ref={wv}
         source={//{ uri: 'http://192.168.1.18:3001/article-comment-editor.html' }
         { html, baseUrl: '' }}

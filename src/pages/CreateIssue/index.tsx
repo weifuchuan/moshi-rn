@@ -10,7 +10,7 @@ import { observer } from 'mobx-react-lite';
 import Issue from '@/models/Issue';
 import { ICourse } from '@/models/Course';
 import BackableLayout from '@/layouts/BackableLayout';
-import WebView2, { AnyAction } from '@/components/WebView2';
+import MoshiWebView, { AnyAction } from '@/components/MoshiWebView';
 import { Toast, Portal } from '@ant-design/react-native';
 import useObject from '@/hooks/useObject';
 import Routes from '@/Routes';
@@ -26,7 +26,7 @@ const CreateIssue: FunctionComponent<
   Props
 > = observer(({ course, onSuccess }) => {
   const store = useContext(StoreContext);
-  const wv = useRef<WebView2>(null);
+  const wv = useRef<MoshiWebView>(null);
 
   const onMsg = useCallback(async ({ action, payload }: AnyAction) => {
     switch (action) {
@@ -99,7 +99,7 @@ const CreateIssue: FunctionComponent<
 
   return (
     <BackableLayout title="Create Issue">
-      <WebView2
+      <MoshiWebView
         ref={wv}
         source={//{ uri: 'http://192.168.1.18:3001/issue-editor.html' }
         { html, baseUrl: '' }}

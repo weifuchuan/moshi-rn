@@ -16,7 +16,7 @@ import {
 import { observer, useObservable } from 'mobx-react-lite';
 import { IIssue } from '@/models/Issue';
 import BackableLayout from '@/layouts/BackableLayout';
-import WebView2, { AnyAction } from '@/components/WebView2';
+import MoshiWebView, { AnyAction } from '@/components/MoshiWebView';
 import Touchable from '@/components/Touchable';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IssueModel from '@/models/Issue';
@@ -42,7 +42,7 @@ const Issue: FunctionComponent<Props> = observer(({ issue }) => {
     issueFetching: false
   });
 
-  const wvRef = useRef<WebView2>(null);
+  const wvRef = useRef<MoshiWebView>(null);
 
   const onMsg = useCallback(async ({ action, payload }: AnyAction) => {
     switch (action) {
@@ -93,7 +93,7 @@ const Issue: FunctionComponent<Props> = observer(({ issue }) => {
       }
     >
       <View style={styles.container}>
-        <WebView2
+        <MoshiWebView
           source={
           //  { uri: 'http://192.168.1.18:3001/issue.html' }
           {html,baseUrl:""}

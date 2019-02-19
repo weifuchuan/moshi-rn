@@ -1,5 +1,5 @@
 import ArticleList from '@/components/ArticleList';
-import WebView2, { AnyAction } from '@/components/WebView2';
+import MoshiWebView, { AnyAction } from '@/components/MoshiWebView';
 import useObject from '@/hooks/useObject';
 import BackableLayout from '@/layouts/BackableLayout';
 import Article, { IArticle } from '@/models/Article';
@@ -123,7 +123,7 @@ const Course: FunctionComponent<
 
   const firstViewIssue = useObject({ is: true });
 
-  const issuesWvRef = useRef<WebView2>(null);
+  const issuesWvRef = useRef<MoshiWebView>(null);
 
   const fetchIssues = useCallback(
     async (filter: 'open' | 'close' | 'your', step?: 'prev' | 'next') => {
@@ -232,7 +232,7 @@ const Course: FunctionComponent<
               }
             >
               <View>
-                <WebView2
+                <MoshiWebView
                   source={//{ uri: 'http://192.168.1.18:3001/issue-list.html' }
                   { html, baseUrl: '' }}
                   on={onMsg}
