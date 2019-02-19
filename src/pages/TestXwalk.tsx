@@ -19,21 +19,37 @@ export default class TestXwalk extends Component {
         />
         <RCTCrossWalkWebView
           ref={(wv) => (this.wv = wv)}
-          style={{ flex: 1 }}
-          onMsg={(e) => console.warn(e)}
+          style={{ flex: 1 }} 
           onMessage={(e) => console.warn(e)}
           source={{
             html: `
-      <div>fuck!!kk!!</div>
+      <div>fuck!!!!</div>
       <div id="log" ></div>  
-      <div id="msg" ></div>  
-      <button onclick="document.dispatchEvent(new MessageEvent('message', {data:'fuck'}))" >fake</button>
-      <button onclick="__REACT_CROSSWALK_VIEW_BRIDGE.postMessage('fuck!!!!!!')" >resp</button>
+      <div id="msg" ></div>   
+      <button id="resp" >resp</button>
+      
       <script> 
-        let log='';
-        for(let key in __REACT_CROSSWALK_VIEW_BRIDGE){
-          alert(key)
-        }
+        // alert('fuck'); 
+        setTimeout(()=>{
+          try{
+            let log='window:\\n';
+            for(let key in window){
+              log += key+"\\n"
+            }
+            document.getElementById('log').innerText = log; 
+          }catch(err){alert(err)}
+
+          document.getElementById('resp').onclick = ()=>{
+            try{
+              __REACT_CROSSWALK_VIEW_BRIDGE.postMessage("resp fuck"); 
+              window.postMessage("resp fuck"); 
+            }catch(err){alert(err)}
+          }
+        }, 1000)
+
+        window.document.addEventListener('message', e => {
+          alert(e.data); 
+        });
       </script>
       
       `
@@ -45,7 +61,7 @@ export default class TestXwalk extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      this.wv!.postMessage('fuck!!!!!!!!!!');
+      // this.wv!.postMessage('fuck!!!!!!!!!!');
     }, 3000);
   }
 }

@@ -2,7 +2,7 @@ import EventEmitter from 'wolfy87-eventemitter';
 import Storage from 'react-native-storage';
 import { AsyncStorage, YellowBox } from 'react-native';
 
-YellowBox.ignoreWarnings([]);
+YellowBox.ignoreWarnings(["Accessing view manager"]);
 
 // @ts-ignore
 global.bus = new EventEmitter();

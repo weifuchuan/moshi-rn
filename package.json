@@ -3,10 +3,10 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "cross-env RCT_METRO_PORT=8088 mode=DEV node node_modules/react-native/local-cli/cli.js start",
+    "start": "cross-env RCT_METRO_PORT=8081 node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "postinstall": "node scripts/install-hooks-support.js",
-    "android": "cross-env RCT_METRO_PORT=8088 mode=DEV node node_modules/react-native/local-cli/cli.js run-android",
+    "android": "cross-env RCT_METRO_PORT=8081 node node_modules/react-native/local-cli/cli.js run-android",
     "build-android": "cd android && ./gradlew assembleRelease",
     "build-android-clean": "cd android && ./gradlew clean && ./gradlew assembleRelease",
     "clean-android": "cd android && ./gradlew clean",
