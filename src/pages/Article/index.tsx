@@ -59,7 +59,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
             patchAvatar(c);
             c.content = contentHtmls[i];
           });
-        }
+        } 
         wvRef.current!.post<AnyAction>({
           action: "load",
           payload: {

@@ -6,20 +6,22 @@ import {
 } from 'react-native-webview';
 import { NativeSyntheticEvent } from 'react-native';
 import { SCREEN_HEIGHT } from '@/kit';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 export interface AnyAction {
   action: string;
   payload: any;
 }
 
-export interface Props extends WebViewSharedProps {
+export interface MoshiWebViewProps extends WebViewSharedProps {
   on?: (payload: any) => Promise<any>;
   wvRef?: (instance: WebView | null) => void;
   minBodyHeight?: string;
   notAutoHeight?: boolean;
 }
 
-export default class MoshiWebView extends React.Component<Props> {
+export default class MoshiWebView extends React.Component<MoshiWebViewProps> {
   static defaultProps = {
     on: () => Promise.resolve()
   };
@@ -94,9 +96,13 @@ export default class MoshiWebView extends React.Component<Props> {
         );
     } else if (msg.type === 'heightChange') {
       // console.warn(''+msg.height)
-      msg.height && this.setState({ height: msg.height });
+      // msg.height && this.setState({ height: msg.height });
+      msg.height && this.setHeight$.next(msg.height);
     }
   };
+
+  private setHeight$ = new Subject<number>();
+
   render() {
     return (
       <WebView
@@ -123,5 +129,15 @@ export default class MoshiWebView extends React.Component<Props> {
         cacheEnabled={true}
       />
     );
+  }
+
+  componentDidMount() {
+    this.setHeight$.pipe(debounceTime(100)).subscribe((height) => {
+      this.setState({ height });
+    });
+  }
+
+  componentWillUnmount() {
+    this.setHeight$.unsubscribe();
   }
 }

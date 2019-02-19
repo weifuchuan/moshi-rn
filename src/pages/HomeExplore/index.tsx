@@ -9,8 +9,8 @@ interface Props {}
 const HomeExplore: FunctionComponent<Props> = () => {
   return (
     <View style={styles.container}>
-      <HomeLayout title={'发现'}>
-        <MoshiWebView source={{ html: 'TODO' }} />
+      <HomeLayout title={'发现'}> 
+        <Text>toooo</Text>
       </HomeLayout>
     </View>
   );
@@ -20,6 +20,7 @@ export default observer(HomeExplore);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1, 
+
   } as ViewStyle
 });
