@@ -213,7 +213,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
         <WebView3
           ref={wvRef as any}
           source={
-               { uri: 'http://192.168.1.18:3001/article.html' }
+               { uri: 'http://192.168.1.18:3001/article.html?x='+Math.random() }
         //  { html, baseUrl: '' } as any
         }
           scalesPageToFit={false}

@@ -113,7 +113,7 @@ const transitionConfig = () => ({
 });
 
 function FullLoading() {
-  const [ loading, setLoading ] = useState(true);
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(() => {
     const f = (loading: boolean) => setLoading(loading);

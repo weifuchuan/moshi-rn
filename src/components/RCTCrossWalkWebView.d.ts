@@ -7,6 +7,7 @@ export interface RCTCrossWalkWebViewProps {
   localhost?: string;
   onError?: (event: any) => void;
   onMessage?: (event: NativeSyntheticEvent<WebViewMessage>) => void;
+  onMsg?: (event: NativeSyntheticEvent<WebViewMessage>) => void;
   onNavigationStateChange?: (event: any) => void;
   onProgress?: (progress: number) => void;
   allowUniversalAccessFromFileURLs?: boolean;

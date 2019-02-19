@@ -2,50 +2,38 @@ import React from 'react';
 import { Component } from 'react';
 import WebView3 from '@/components/WebView3';
 import RCTCrossWalkWebView from '@/components/RCTCrossWalkWebView';
-import { View } from 'react-native';
+import { View, Button, NativeModules } from 'react-native';
 
 export default class TestXwalk extends Component {
-  wv:RCTCrossWalkWebView|null = null;
+  wv: RCTCrossWalkWebView | null = null;
 
   render() {
     return (
       <View style={{ flex: 1 }}>
+        <Button
+          title="send fuck"
+          onPress={() => {
+            console.warn("click")
+            this.wv!.postMessage('fuck');
+          }}
+        />
         <RCTCrossWalkWebView
-          ref={wv=>this.wv=wv}
+          ref={(wv) => (this.wv = wv)}
           style={{ flex: 1 }}
-          onMessage={console.warn}
+          onMsg={(e) => console.warn(e)}
+          onMessage={(e) => console.warn(e)}
           source={{
             html: `
-      <div>fuck!!!</div>
+      <div>fuck!!kk!!</div>
       <div id="log" ></div>  
       <div id="msg" ></div>  
+      <button onclick="document.dispatchEvent(new MessageEvent('message', {data:'fuck'}))" >fake</button>
+      <button onclick="__REACT_CROSSWALK_VIEW_BRIDGE.postMessage('fuck!!!!!!')" >resp</button>
       <script> 
-        window.addEventListener('message', (e)=>{
-          alert(e)
-          document.getElementById('msg').innerText = JSON.stringify(e);            
-        }); 
-        window.addEventListener('message',(ev) => {
-          alert(ev);
-        })
-
-        try{
-        setTimeout(()=>{
-          // alert(window.postMessage);
-          window.postMessage("fuck")
-          let log = ''; 
-          for (let key in window.__REACT_CROSSWALK_VIEW_BRIDGE){
-            log += key+'\\n'
-          }
-          __REACT_CROSSWALK_VIEW_BRIDGE.postMessage("fuck"); 
-          document.getElementById('log').innerText = log;            
-        }, 2000);
-
-        setTimeout(()=>{
-          window.postMessage("fuck") 
-        }, 4000)
-      }catch(err){
-        alert(err)
-      }
+        let log='';
+        for(let key in __REACT_CROSSWALK_VIEW_BRIDGE){
+          alert(key)
+        }
       </script>
       
       `
@@ -55,9 +43,9 @@ export default class TestXwalk extends Component {
     );
   }
 
-  componentDidMount(){
+  componentDidMount() {
     setTimeout(() => {
-      this.wv!.postMessage("fuck!!!!!!!!!!")
+      this.wv!.postMessage('fuck!!!!!!!!!!');
     }, 3000);
   }
 }
