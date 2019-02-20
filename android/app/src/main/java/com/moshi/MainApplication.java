@@ -56,7 +56,7 @@ public class MainApplication extends Application implements ReactApplication {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
         // #xwalk 
-        // new XWalkView(this ).onDestroy();  // just add this line for RN dev mode,and release mode you can delete it
+        new XWalkView(this ).onDestroy();  // just add this line for RN dev mode,and release mode you can delete it
         // /xwalk
     }
 }
