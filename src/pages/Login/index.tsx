@@ -45,6 +45,7 @@ const Login: FunctionComponent<Props> = () => {
           form.captcha
         );
         store.me = account;
+        store.explore();
         Routes.pop();
       } catch (err) {
         console.warn(err);

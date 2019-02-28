@@ -47,6 +47,7 @@ const Reg: FunctionComponent<Props> = () => {
         );
         store.me = account;
         Modal.alert('注册成功！', '请尽快到邮箱激活账号');
+        store.explore();
         Routes.pop(); 
       } catch (err) {
         console.warn(err);
