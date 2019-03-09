@@ -71,16 +71,6 @@ import com.android.build.OutputFile
  *   extraPackagerArgs: []
  * ]
  */
- 
-import groovy.json.JsonSlurper
-import java.util.regex.Pattern
-
-
-def getNpmVersion() {
-    def inputFile = new File("../package.json")
-    def packageJson = new JsonSlurper().parseText(inputFile.text)
-    return packageJson["version"]
-}
 
 project.ext.react = [
     entryFile: "index.js"
@@ -105,38 +95,32 @@ def enableProguardInReleaseBuilds = false
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
     defaultConfig {
         applicationId "com.moshi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName getNpmVersion()
-    }
-    signingConfigs {
-        release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
-        }
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
     }
     splits {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
-            include "armeabi-v7a", "x86", "arm64-v8a"
+            include "armeabi-v7a", "x86", "arm64-v8a", "x86-64"
         }
     }
     buildTypes {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -144,7 +128,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3]
+            def versionCodes = ["armeabi-v7a":1, "x86":2, "arm64-v8a": 3, "x86-64": 4]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -155,11 +139,12 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-device-info')
-    implementation project(':react-native-fs')
-    implementation project(':react-native-webview')
     implementation project(':rn-fetch-blob')
+    implementation project(':react-native-webview')
     implementation project(':react-native-vector-icons')
+    implementation project(':react-native-image-crop-picker')
+    implementation project(':react-native-fs')
+    implementation project(':react-native-device-info')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation "com.facebook.react:react-native:+"  // From node_modules
@@ -170,23 +155,4 @@ dependencies {
 task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
-}
-
-task('increaseVersionCode') << {
-    def buildFile = file("build.gradle")
-    def pattern = Pattern.compile("versionCode(\\s+\\d+)")
-    def buildText = buildFile.getText()
-    def matcher = pattern.matcher(buildText)
-    matcher.find()
-    def versionCode = android.defaultConfig.versionCode
-    def buildContent = matcher.replaceAll("versionCode " + ++versionCode)
-    buildFile.write(buildContent)
-
-    System.out.println("Incrementing Version Code ===> " + versionCode)
-}
-
-tasks.whenTaskAdded { task ->
-    if (task.name == 'generateReleaseBuildConfig') {
-        task.dependsOn 'increaseVersionCode'
-    }
 }

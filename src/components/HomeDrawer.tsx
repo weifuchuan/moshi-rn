@@ -1,5 +1,13 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, ViewStyle, Image, AppRegistry, BackHandler } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+  Image,
+  AppRegistry,
+  BackHandler
+} from 'react-native';
 import {
   Drawer,
   Avatar,
@@ -77,8 +85,8 @@ export default observer(function HomeDrawer() {
                       async (i) => {
                         if (i === 0) {
                           await Account.logout();
-                          store.me = null; 
-                        }else if(i===1){
+                          store.me = null;
+                        } else if (i === 1) {
                           BackHandler.exitApp();
                         }
                       }
@@ -88,19 +96,24 @@ export default observer(function HomeDrawer() {
               }
             />
           </Drawer.Header>
+
           <Drawer.Section
-            divider
+            title="个性化"
             items={[
-              { icon: 'bookmark-border', value: 'Notifications' },
-              { icon: 'today', value: 'Calendar', active: true },
-              { icon: 'people', value: 'Clients' }
-            ]}
-          />
-          <Drawer.Section
-            title="Personal"
-            items={[
-              { icon: 'info', value: 'Info' },
-              { icon: 'settings', value: 'Settings' }
+              {
+                icon: 'help',
+                value: '帮助和反馈',
+                onPress: () => {
+                  Routes.help();
+                }
+              },
+              {
+                icon: 'settings',
+                value: '设置',
+                onPress: () => {
+                  Routes.settings();
+                }
+              }
             ]}
           />
         </React.Fragment>

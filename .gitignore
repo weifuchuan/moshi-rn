@@ -58,8 +58,4 @@ buck-out/
 
 # Bundle artifact
 *.jsbundle
-android/gradle/wrapper/gradle-4.7-all.zip
-
-# webapp
-webapp/node_modules
-android/gradle.properties
+android/gradle/gradle-4.10.2-all.zip

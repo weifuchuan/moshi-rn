@@ -37,7 +37,7 @@ const Login: FunctionComponent<Props> = () => {
   const [ loading, setLoading ] = useState(false);
   const onLogin = useCallback(
     async () => {
-      setLoading(false);
+      setLoading(true);
       try {
         const account = await Account.login(
           form.email,
@@ -47,13 +47,12 @@ const Login: FunctionComponent<Props> = () => {
         store.me = account;
         store.explore();
         Routes.pop();
-      } catch (err) {
-        console.warn(err);
-        Toast.fail(err.toString());
+      } catch (err) { 
+        Toast.fail(err.toString());        
         updateCaptcha();
         dispatch({ type: 'captcha', payload: '' });
       }
-      setLoading(true);
+      setLoading(false);
     },
     [ form ]
   );

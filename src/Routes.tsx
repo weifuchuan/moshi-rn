@@ -23,6 +23,9 @@ const Routes = {
   settings() {
     Actions.push('settings');
   },
+  help() {
+    Actions.push('help');
+  },
   article(article: IArticle, list?: IArticle[]) {
     Actions.push('article', { article, list });
   },

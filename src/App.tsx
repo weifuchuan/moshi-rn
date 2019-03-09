@@ -24,6 +24,7 @@ import CreateIssue from './pages/CreateIssue';
 import Issue from './pages/Issue';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './kit';
 import IssueComment from './pages/IssueComment';
+import Help from './pages/Help/index';
 const { StackViewStyleInterpolator } = require('react-navigation-stack');
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -86,6 +87,7 @@ export default packToClassComponent(function App() {
                 <Scene key={'login'} component={Login} />
                 <Scene key={'reg'} component={Reg} />
                 <Scene key={'settings'} component={Settings} />
+                <Scene key={'help'} component={Help} />
                 <Scene key={'course'} component={Course} />
                 <Scene key="courseIntro" component={CourseIntro} />
                 <Scene key="courseList" component={CourseList} />
@@ -120,6 +122,7 @@ function FullLoading() {
       bus.removeListener('fullLoading', f);
     };
   }, []);
+
   return (
     <View
       style={{
@@ -132,7 +135,7 @@ function FullLoading() {
         alignItems: 'center'
       }}
     >
-      <ActivityIndicator size="large" color={colors.DeepSkyBlue} />
+      <ActivityIndicator size="large" color={colors.Azure} />
     </View>
   );
 }

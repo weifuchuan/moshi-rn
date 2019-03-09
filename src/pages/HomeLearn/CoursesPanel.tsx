@@ -77,42 +77,6 @@ const CoursesPanel: FunctionComponent<
                       {course.lectureCount}讲 | 已学习{course.learnedCount || 0}讲
                     </Text>
                   </View>
-                  <View style={styles.priceBar}>
-                    {!isUndefOrNull(course.discountedPrice) &&
-                    course.offerTo &&
-                    course.offerTo > Date.now() ? (
-                      <React.Fragment>
-                        <Text style={styles.timeLimit}>限时</Text>
-                      </React.Fragment>
-                    ) : null}
-                    <Text
-                      style={{
-                        color: '#FF6347',
-                        fontSize: 16,
-                        marginLeft:
-                          !isUndefOrNull(course.discountedPrice) &&
-                          course.offerTo &&
-                          course.offerTo > Date.now()
-                            ? 5
-                            : 0
-                      }}
-                    >
-                      ￥{!isUndefOrNull(course.discountedPrice) &&
-                      course.offerTo &&
-                      course.offerTo > Date.now() ? (
-                        course.discountedPrice
-                      ) : (
-                        course.price
-                      )}
-                    </Text>
-                    {!isUndefOrNull(course.discountedPrice) &&
-                    course.offerTo &&
-                    course.offerTo > Date.now() ? (
-                      <React.Fragment>
-                        <Text style={styles.price}>￥{course.price}</Text>
-                      </React.Fragment>
-                    ) : null}
-                  </View>
                 </View>
               </View>
             </Touchable>

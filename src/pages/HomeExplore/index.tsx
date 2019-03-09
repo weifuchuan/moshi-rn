@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { View, StyleSheet, ViewStyle, Text } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import HomeLayout from '../../layouts/HomeLayout';
+import HomeLayout from '@/layouts/HomeLayout';
 import MoshiWebView from '@/components/MoshiWebView';
 
 interface Props {}
