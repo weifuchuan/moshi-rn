@@ -6,8 +6,8 @@ import { fromEvent } from 'rxjs';
 let baseUrl = '';
 let staticBaseUrl = '';
 // if (__DEV__) {
-baseUrl = 'http://192.168.0.160:8080';
-staticBaseUrl = 'http://192.168.0.160:8080';
+baseUrl = 'http://192.168.1.101:8080';
+staticBaseUrl = 'http://192.168.1.101:8080';
 // }
 
 export { baseUrl, staticBaseUrl };

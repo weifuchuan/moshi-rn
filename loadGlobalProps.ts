@@ -1,6 +1,8 @@
 import EventEmitter from 'wolfy87-eventemitter';
 import Storage from 'react-native-storage';
-import { AsyncStorage, YellowBox } from 'react-native';
+import { YellowBox } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import { colors } from './src/themes/index';
 
 YellowBox.ignoreWarnings([]);
 
@@ -13,3 +15,7 @@ global.storage = new Storage({
   defaultExpires: null,
   enableCache: false
 });
+
+(global as any).colors = colors;
+
+console.warn(colors); 

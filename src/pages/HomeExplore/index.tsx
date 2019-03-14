@@ -6,21 +6,20 @@ import MoshiWebView from '@/components/MoshiWebView';
 
 interface Props {}
 
-const HomeExplore: FunctionComponent<Props> = () => {
+const HomeExplore: FunctionComponent<Props> = observer(() => {
   return (
     <View style={styles.container}>
-      <HomeLayout title={'发现'}> 
+      <HomeLayout title={'发现'}>
         <Text>toooo</Text>
       </HomeLayout>
     </View>
   );
-};
+});
 
-export default observer(HomeExplore);
+export default HomeExplore;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
-
+    flex: 1
   } as ViewStyle
 });

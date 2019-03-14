@@ -288,8 +288,8 @@ export const defaultThemes = Object.freeze({
 
 const ThemeContext = React.createContext(defaultThemes);
 
-export default ThemeContext;
-
-(global as any).colors = defaultThemes.colors;
+export default ThemeContext; 
 
 export const colors = defaultThemes.colors;
+
+(global as any).colors = colors;
