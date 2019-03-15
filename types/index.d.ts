@@ -1,7 +1,7 @@
 import EventEmitter from 'wolfy87-eventemitter';
 import { Store } from '@/store';
 import Storage from 'react-native-storage';
-import { colors as _colors } from '../src/themes/index';
+import { colors as _colors } from '../loadGlobalProps';
 
 declare global {
   declare var bus: EventEmitter;

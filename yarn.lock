@@ -7,10 +7,10 @@
   resolved "http://registry.npm.taobao.org/@ant-design/icons-react-native/download/@ant-design/icons-react-native-1.0.2.tgz#28648eacb808a1fae0ad59d691bbb472a6ffc26e"
   integrity sha1-KGSOrLgIofrgrVnWkbu0cqb/wm4=
 
-"@ant-design/react-native@^3.1.3":
-  version "3.1.3"
-  resolved "http://registry.npm.taobao.org/@ant-design/react-native/download/@ant-design/react-native-3.1.3.tgz#457a3d37df6031232e55c830e061050bd6b68439"
-  integrity sha1-RXo9N99gMSMuVcgw4GEFC9a2hDk=
+"@ant-design/react-native@^3.1.4":
+  version "3.1.4"
+  resolved "http://registry.npm.taobao.org/@ant-design/react-native/download/@ant-design/react-native-3.1.4.tgz#852a7862e37b995d018d04d2c223d3c8e1142bfe"
+  integrity sha1-hSp4YuN7mV0BjQTSwiPTyOEUK/4=
   dependencies:
     "@ant-design/icons-react-native" "^1.0.2"
     "@bang88/react-native-drawer-layout" "^2.0.3"
@@ -859,10 +859,10 @@
     "@types/istanbul-lib-coverage" "^1.1.0"
     "@types/yargs" "^12.0.9"
 
-"@react-native-community/async-storage@^1.2.0":
-  version "1.2.0"
-  resolved "http://registry.npm.taobao.org/@react-native-community/async-storage/download/@react-native-community/async-storage-1.2.0.tgz#33ebb208709c5ed99387007c94b0ae931a05c276"
-  integrity sha1-M+uyCHCcXtmThwB8lLCukxoFwnY=
+"@react-native-community/async-storage@^1.2.1":
+  version "1.2.1"
+  resolved "http://registry.npm.taobao.org/@react-native-community/async-storage/download/@react-native-community/async-storage-1.2.1.tgz#b4ba4f378e910518f3075e285c02f95143a5793c"
+  integrity sha1-tLpPN46RBRjzB14oXAL5UUOleTw=
 
 "@react-native-community/cli@^1.2.1":
   version "1.4.1"
@@ -4378,10 +4378,10 @@ metro-babel7-plugin-react-transform@0.51.1:
   dependencies:
     "@babel/helper-module-imports" "^7.0.0"
 
-metro-babel7-plugin-react-transform@0.53.0:
-  version "0.53.0"
-  resolved "http://registry.npm.taobao.org/metro-babel7-plugin-react-transform/download/metro-babel7-plugin-react-transform-0.53.0.tgz#44b0703297a2e389917eb45f9bbda73a088f2750"
-  integrity sha1-RLBwMpei44mRfrRfm72nOgiPJ1A=
+metro-babel7-plugin-react-transform@0.53.1:
+  version "0.53.1"
+  resolved "http://registry.npm.taobao.org/metro-babel7-plugin-react-transform/download/metro-babel7-plugin-react-transform-0.53.1.tgz#9ad31e5c84f5003333a6a3cf79f2d093cd3b2ddc"
+  integrity sha1-mtMeXIT1ADMzpqPPefLQk807Ldw=
   dependencies:
     "@babel/helper-module-imports" "^7.0.0"
 
@@ -4510,10 +4510,10 @@ metro-react-native-babel-preset@0.51.1:
     metro-babel7-plugin-react-transform "0.51.1"
     react-transform-hmr "^1.0.4"
 
-metro-react-native-babel-preset@^0.53.0:
-  version "0.53.0"
-  resolved "http://registry.npm.taobao.org/metro-react-native-babel-preset/download/metro-react-native-babel-preset-0.53.0.tgz#4e8147dd56c94b6f4e09e8b067b27f2e0ec757a1"
-  integrity sha1-ToFH3VbJS29OCeiwZ7J/Lg7HV6E=
+metro-react-native-babel-preset@^0.53.1:
+  version "0.53.1"
+  resolved "http://registry.npm.taobao.org/metro-react-native-babel-preset/download/metro-react-native-babel-preset-0.53.1.tgz?cache=0&other_urls=http%3A%2F%2Fregistry.npm.taobao.org%2Fmetro-react-native-babel-preset%2Fdownload%2Fmetro-react-native-babel-preset-0.53.1.tgz#6cd9e41a1b9a6e210e71ef2adf114219b4eaf2ec"
+  integrity sha1-bNnkGhuabiEOce8q3xFCGbTq8uw=
   dependencies:
     "@babel/plugin-proposal-class-properties" "^7.0.0"
     "@babel/plugin-proposal-export-default-from" "^7.0.0"
@@ -4549,7 +4549,7 @@ metro-react-native-babel-preset@^0.53.0:
     "@babel/plugin-transform-typescript" "^7.0.0"
     "@babel/plugin-transform-unicode-regex" "^7.0.0"
     "@babel/template" "^7.0.0"
-    metro-babel7-plugin-react-transform "0.53.0"
+    metro-babel7-plugin-react-transform "0.53.1"
     react-transform-hmr "^1.0.4"
 
 metro-react-native-babel-transformer@0.51.0:

@@ -25,6 +25,7 @@ import Issue from './pages/Issue';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from './kit';
 import IssueComment from './pages/IssueComment';
 import Help from './pages/Help/index';
+import NewsList from './pages/NewsList';
 const { StackViewStyleInterpolator } = require('react-navigation-stack');
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -81,7 +82,6 @@ export default packToClassComponent(function App() {
                         bus.emit('selectHomeBottomNav', 'learn');
                       }}
                     />
-                    {/* <Scene key="my" component={HomeMy} /> */}
                   </Tabs>
                 </Drawer>
                 <Scene key={'login'} component={Login} />
@@ -98,6 +98,7 @@ export default packToClassComponent(function App() {
                 <Scene key={'issue'} component={Issue} />
                 <Scene key={'createIssue'} component={CreateIssue} />
                 <Scene key={'issueComment'} component={IssueComment} />
+                <Scene key={"newsList"} component={NewsList}/>
               </Modal>
             </Router>
           </StoreContext.Provider>
@@ -114,6 +115,7 @@ const transitionConfig = () => ({
 
 function FullLoading() {
   const [ loading, setLoading ] = useState(true);
+ 
 
   useEffect(() => {
     const f = (loading: boolean) => setLoading(loading);
@@ -132,10 +134,11 @@ function FullLoading() {
         height: SCREEN_HEIGHT,
         width: SCREEN_WIDTH,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        zIndex: 1
       }}
     >
-      <ActivityIndicator size="large" color={colors.Azure} />
+      <ActivityIndicator size="large" color={colors.DoderBlue} />
     </View>
   );
 }

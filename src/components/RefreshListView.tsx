@@ -35,23 +35,15 @@ interface Props<Item> extends FlatListProps<Item> {
 
 export type RefreshStateType = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
-export const RefreshState: {
-  Idle: RefreshStateType; //普通状态
-  HeaderRefreshing: RefreshStateType; //头部菊花转圈圈中
-  FooterRefreshing: RefreshStateType; //底部菊花转圈圈中
-  NoMoreData: RefreshStateType; //已加载全部数据
-  Failure: RefreshStateType; //加载失败
-  EmptyData: RefreshStateType;
-  EndData: RefreshStateType;
-} = {
-  Idle: 0, //普通状态
-  HeaderRefreshing: 1, //头部菊花转圈圈中
-  FooterRefreshing: 2, //底部菊花转圈圈中
-  NoMoreData: 3, //已加载全部数据
-  Failure: 4, //加载失败
-  EmptyData: 5,
-  EndData: 6
-};
+export const RefreshState = Object.freeze({
+  Idle: 0 as RefreshStateType, //普通状态
+  HeaderRefreshing: 1 as RefreshStateType, //头部菊花转圈圈中
+  FooterRefreshing: 2 as RefreshStateType, //底部菊花转圈圈中
+  NoMoreData: 3 as RefreshStateType, //已加载全部数据
+  Failure: 4 as RefreshStateType, //加载失败
+  EmptyData: 5 as RefreshStateType,
+  EndData: 6 as RefreshStateType
+});
 
 export default class RefreshListView<Item = any> extends Component<
   Props<Item>

@@ -18,7 +18,8 @@ export class Store {
         const data = await storage.load({
           key: 'explore'
         });
-        if (!this.exploreData) this.exploreData = data;
+        // console.warn('exploreData',data)
+        if (!this.exploreData) this.exploreData = observable(data);
       } catch (err) {}
     })();
   }
@@ -38,9 +39,10 @@ export class Store {
       3
     );
     const ret = resp.data;
-    this.exploreData = ret;
+    this.exploreData = observable(ret);
     this.explored = true;
     await storage.save({ key: 'explore', data: ret });
+    // console.warn('save exploreData',ret)
   }
 }
 

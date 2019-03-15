@@ -23,6 +23,9 @@ const Routes = {
   settings() {
     Actions.push('settings');
   },
+  newsList() {
+    Actions.push('newsList');
+  },
   help() {
     Actions.push('help');
   },

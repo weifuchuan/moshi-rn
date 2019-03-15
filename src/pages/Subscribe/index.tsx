@@ -23,7 +23,8 @@ import {
   StyleSheet,
   Text,
   View,
-  ViewStyle
+  ViewStyle,
+  ImageStyle
 } from 'react-native';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -103,12 +104,7 @@ const Subscribe: FunctionComponent<
             {course.introduceImage ? (
               <Image
                 source={{ uri: staticBaseUrl + course.introduceImage }}
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 5,
-                  marginRight: 8
-                }}
+                style={styles.image}
                 resizeMode="stretch"
               />
             ) : null}
@@ -248,5 +244,11 @@ const styles = StyleSheet.create({
   courseInfo: {
     flexDirection: 'row',
     padding: 16
-  } as ViewStyle
+  } as ViewStyle,
+  image: {
+    width: 80,
+    height: 80,
+    borderRadius: 5,
+    marginRight: 8
+  } as ImageStyle
 });
