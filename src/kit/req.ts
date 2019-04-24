@@ -3,12 +3,12 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import EventEmitter from 'wolfy87-eventemitter';
 import { fromEvent } from 'rxjs';
 
-let baseUrl = '';
-let staticBaseUrl = '';
-// if (__DEV__) {
-baseUrl = 'http://192.168.1.101:8080';
-staticBaseUrl = 'http://192.168.1.101:8080';
-// }
+let baseUrl = 'http://123.207.28.107:8080';
+let staticBaseUrl = 'http://123.207.28.107:8080';
+if (__DEV__) {
+  baseUrl = 'http://192.168.1.101:8080';
+  staticBaseUrl = 'http://192.168.1.101:8080';
+}
 
 export { baseUrl, staticBaseUrl };
 

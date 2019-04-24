@@ -11,10 +11,12 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
   TextStyle,
-  FlatListProps
+  FlatListProps,
+  NativeModules
 } from 'react-native';
+import { measure } from '@/kit';
 
-interface Props<Item> extends FlatListProps<Item> {
+interface RefreshListViewProps<Item> extends FlatListProps<Item> {
   data: Array<Item>;
   renderItem: ListRenderItem<Item>;
 
@@ -25,7 +27,7 @@ interface Props<Item> extends FlatListProps<Item> {
   footerContainerStyle?: ViewStyle;
   footerTextStyle?: TextStyle;
 
-  listRef?: (list: FlatList<Item> | null) => void;
+  listRef?: ((instance: FlatList<Item> | null) => void);
 
   footerRefreshingText?: string;
   footerFailureText?: string;
@@ -46,25 +48,50 @@ export const RefreshState = Object.freeze({
 });
 
 export default class RefreshListView<Item = any> extends Component<
-  Props<Item>
+  RefreshListViewProps<Item>
 > {
+  private height = 0;
+  private contentWidth = 0;
+  private contentHeight = 0;
+  private _listRef: FlatList<Item> | null = null;
+
+  get listRef() {
+    return this._listRef;
+  }
+
   render() {
     return (
       <FlatList
         {...this.props}
         data={this.props.data}
         renderItem={this.props.renderItem}
-        ref={this.props.listRef}
+        ref={(list) => {
+          this._listRef = list;
+          if (this.props.listRef) {
+            this.props.listRef(list);
+          }
+        }}
         onScroll={this.onScroll}
         onRefresh={this.onHeaderRefresh}
         refreshing={this.props.refreshState === RefreshState.HeaderRefreshing}
         ListFooterComponent={this.renderFooter as any}
+        onContentSizeChange={this.onContentSizeChange}
+        onLayout={(e) => (this.height = e.nativeEvent.layout.height)}
       />
     );
   }
 
+  readonly isFull = () => {
+    return this.height <= this.contentHeight;
+  };
+
   // 上一次到的点
   private nativeEvent: NativeScrollEvent | null = null;
+
+  private onContentSizeChange = (w: number, h: number) => {
+    this.contentHeight = h;
+    this.contentWidth = w;
+  };
 
   private onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     this.props.onScroll && this.props.onScroll(event);
@@ -206,14 +233,14 @@ export default class RefreshListView<Item = any> extends Component<
     footerEmptyDataText: '服务器没有数据'
   };
 
-  componentWillReceiveProps(nextProps: Props<Item>) {
+  componentWillReceiveProps(nextProps: RefreshListViewProps<Item>) {
     log(
       '[RefreshListView]  RefreshListView componentWillReceiveProps ' +
         nextProps.refreshState
     );
   }
 
-  componentDidUpdate(prevProps: Props<Item>) {
+  componentDidUpdate(prevProps: RefreshListViewProps<Item>) {
     log(
       '[RefreshListView]  RefreshListView componentDidUpdate ' +
         prevProps.refreshState

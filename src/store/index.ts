@@ -26,7 +26,7 @@ export class Store {
 
   async explore() {
     if (__DEV__) {
-      GET('/srv/v1/course/clear');
+      // GET('/srv/v1/course/clear');
     }
     const resp = await retryDo(
       async () =>
@@ -44,6 +44,8 @@ export class Store {
     await storage.save({ key: 'explore', data: ret });
     // console.warn('save exploreData',ret)
   }
+
+  
 }
 
 const store = new Store();

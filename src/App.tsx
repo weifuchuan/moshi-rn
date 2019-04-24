@@ -26,6 +26,7 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH } from './kit';
 import IssueComment from './pages/IssueComment';
 import Help from './pages/Help/index';
 import NewsList from './pages/NewsList';
+import Communication from './pages/Communication';
 const { StackViewStyleInterpolator } = require('react-navigation-stack');
 
 // on Android, the URI prefix typically contains a host in addition to scheme
@@ -99,6 +100,7 @@ export default packToClassComponent(function App() {
                 <Scene key={'createIssue'} component={CreateIssue} />
                 <Scene key={'issueComment'} component={IssueComment} />
                 <Scene key={"newsList"} component={NewsList}/>
+                <Scene key={'communication'} component={Communication} />
               </Modal>
             </Router>
           </StoreContext.Provider>

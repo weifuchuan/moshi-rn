@@ -4,7 +4,7 @@ export const SCREEN_WIDTH = Dimensions.get('window').width;
 export const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 export function measure(
-	e: any
+	elem: any
 ): Promise<{
 	x: number;
 	y: number;
@@ -15,7 +15,7 @@ export function measure(
 }> {
 	return new Promise((resolve) => {
 		NativeModules.UIManager.measure(
-			e.target,
+			elem,
 			(x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
 				resolve({ x, y, width, height, pageX, pageY });
 			}

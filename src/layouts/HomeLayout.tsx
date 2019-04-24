@@ -21,6 +21,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StoreContext } from '@/store';
+import MessagingIcon from '@/components/MessagingIcon';
 
 interface Props {
   title: string;
@@ -89,13 +90,16 @@ const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
           <Text style={{ fontSize: 24, color: '#000', fontWeight: 'bold' }}>
             {title}
           </Text>
-          <Touchable
-            onPress={() => {
-              Routes.drawerOpen();
-            }}
-          >
-            <MaterialCommunityIcons name="account" size={24} />
-          </Touchable>
+          <View style={{ flexDirection: 'row' }}>
+            <MessagingIcon />
+            <Touchable
+              onPress={() => {
+                Routes.drawerOpen();
+              }}
+            >
+              <MaterialCommunityIcons name="account" size={24} />
+            </Touchable>
+          </View>
         </View>
         {children}
       </ScrollView>

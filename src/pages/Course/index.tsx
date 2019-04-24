@@ -37,8 +37,7 @@ interface Props {
 const Course: FunctionComponent<
   Props
 > = observer(({ course: courseByUpStream }) => {
-  const store = useContext(StoreContext);
-  const theme = useContext(ThemeContext);
+  const store = useContext(StoreContext); 
 
   const state = useObservable({
     course: CourseModel.from(toJS(courseByUpStream)),

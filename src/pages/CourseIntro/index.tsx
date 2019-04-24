@@ -90,14 +90,14 @@ const CourseIntro: FunctionComponent<
             style={[
               styles.bottomBtn,
               {
-                borderColor: theme.colors.ORANGE,
+                borderColor: theme.colors.Orange,
                 borderWidth: 1,
                 backgroundColor: '#fff',
                 flex: 1.2
               }
             ]}
           >
-            <Text style={{ color: theme.colors.ORANGE, fontSize: 16 }}>
+            <Text style={{ color: theme.colors.Orange, fontSize: 16 }}>
               免费试读
             </Text>
           </View>
@@ -110,9 +110,9 @@ const CourseIntro: FunctionComponent<
             style={[
               styles.bottomBtn,
               {
-                borderColor: theme.colors.PROTRUDING,
+                borderColor: theme.colors.Tomato,
                 borderWidth: 1,
-                backgroundColor: theme.colors.PROTRUDING,
+                backgroundColor: theme.colors.Tomato,
                 flex: 2
               }
             ]}

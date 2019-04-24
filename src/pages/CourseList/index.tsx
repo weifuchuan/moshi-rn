@@ -149,7 +149,7 @@ const CourseList: FunctionComponent<Props> = ({ type }) => {
                     style={[
                       { fontSize: 16 },
                       state.orderBy === 'publishAt'
-                        ? { color: theme.colors.PROTRUDING }
+                        ? { color: theme.colors.Tomato }
                         : {}
                     ]}
                   >
@@ -171,7 +171,7 @@ const CourseList: FunctionComponent<Props> = ({ type }) => {
                     style={[
                       { fontSize: 16 },
                       state.orderBy === 'subscribedCount'
-                        ? { color: theme.colors.PROTRUDING }
+                        ? { color: theme.colors.Tomato }
                         : {}
                     ]}
                   >
@@ -201,7 +201,7 @@ const CourseList: FunctionComponent<Props> = ({ type }) => {
                     style={[
                       { fontSize: 16 },
                       state.orderBy === 'price'
-                        ? { color: theme.colors.PROTRUDING }
+                        ? { color: theme.colors.Tomato }
                         : {}
                     ]}
                   >
@@ -252,7 +252,7 @@ function buildHeaderComponent(
                   style={[
                     { fontSize: 16 },
                     state.orderBy === 'publishAt'
-                      ? { color: theme.colors.PROTRUDING }
+                      ? { color: theme.colors.Tomato }
                       : {}
                   ]}
                 >
@@ -274,7 +274,7 @@ function buildHeaderComponent(
                   style={[
                     { fontSize: 16 },
                     state.orderBy === 'subscribedCount'
-                      ? { color: theme.colors.PROTRUDING }
+                      ? { color: theme.colors.Tomato }
                       : {}
                   ]}
                 >
@@ -304,7 +304,7 @@ function buildHeaderComponent(
                   style={[
                     { fontSize: 16 },
                     state.orderBy === 'price'
-                      ? { color: theme.colors.PROTRUDING }
+                      ? { color: theme.colors.Tomato }
                       : {}
                   ]}
                 >
@@ -337,12 +337,12 @@ function UpDown({ state }: { state: 'up' | 'down' | undefined }) {
       <Foundation
         name={'arrow-up'}
         size={8}
-        color={state && state === 'up' ? theme.colors.PROTRUDING : undefined}
+        color={state && state === 'up' ? theme.colors.Tomato : undefined}
       />
       <Foundation
         name={'arrow-down'}
         size={8}
-        color={state && state === 'down' ? theme.colors.PROTRUDING : undefined}
+        color={state && state === 'down' ? theme.colors.Tomato : undefined}
       />
     </View>
   );

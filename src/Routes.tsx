@@ -64,6 +64,9 @@ const Routes = {
     onCommentSuccess: (comment: IIssueComment) => void
   ) {
     Actions.push('issueComment', { issue, onCommentSuccess });
+  },
+  communication(){
+    Actions.push("communication"); 
   }
 };
 

@@ -45,6 +45,7 @@ const HomeExplore: FunctionComponent<Props> = observer(() => {
             Routes.courseList('column');
           }}
         />
+        <Divider />
         <Block
           leftTitle={'推荐视频课程'}
           rightTitle="查看全部"
