@@ -1,30 +1,44 @@
-import { GET } from './req';
+import {GET} from './req';
+
+const xml2js = require('react-native-xml2js')
 
 interface Config {
   serverUrl: string;
   tenantid: string;
   token: string;
   apikey: string;
+  sessionid: string;
 }
 
 const config: Config = {
   serverUrl: '',
   tenantid: '',
   token: '',
-  apikey: ''
+  apikey: '',
+  sessionid: ''
 };
 
-async function initConfig() {
-  const resp = await GET<Config>('/srv/v1/rcsys/config');
+export async function initEasyrecConfig() {
+  const resp = await GET<Config>('/easyrec');
   Object.assign(config, resp.data);
 }
 
-initConfig();
-
 // http://easyrec.org/implement
 export class EasyrecAPI {
+  static async mostvieweditems() {
+    // http://123.207.28.107:9090/easyrec/api/1.1/mostvieweditems?apikey=e9ede1d7cd9422b30a2b500394aa9770&tenantid=moshi&timeRange=ALL&requesteditemtype=COURSE
+    const resp=await GET<string>(config.serverUrl.trim() + "/api/1.1/mostvieweditems", {
+      apikey: config.apikey,
+      tenantid: config.tenantid,
+      timeRange: "ALL",
+      requesteditemtype: "COURSE"
+    }, {responseType: "text"});
+    const xml=resp.data;
+
+  }
+
   static async view(params: {
-    sessionid: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
+    sessionid?: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
     itemid: string; // id to identify an item on your Website. (e.g. "ID001")
     itemdescription: string; // item description that is displayed when showing recommendations on your Website. (e.g. "the frog")
     itemurl: string; // url that links to the item page on your Website. Note:Please encode &'s in url with %26
@@ -34,11 +48,12 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
+    if (!params.sessionid) params.sessionid = config.sessionid;
     return await get('/api/1.1/view', params);
   }
 
   static async buy(params: {
-    sessionid: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
+    sessionid?: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
     itemid: string; // id to identify an item on your Website. (e.g. "ID001")
     itemdescription: string; // item description that is displayed when showing recommendations on your Website. (e.g. "the frog")
     itemurl: string; // url that links to the item page on your Website. Note:Please encode &'s in url with %26
@@ -48,11 +63,12 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
+    if (!params.sessionid) params.sessionid = config.sessionid;
     return await get('/api/1.1/buy', params);
   }
 
   static async rate(params: {
-    sessionid: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
+    sessionid?: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
     itemid: string; // id to identify an item on your Website. (e.g. "ID001")
     itemdescription: string; // item description that is displayed when showing recommendations on your Website. (e.g. "the frog")
     itemurl: string; // url that links to the item page on your Website. Note:Please encode &'s in url with %26
@@ -63,11 +79,12 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
+    if (!params.sessionid) params.sessionid = config.sessionid;
     return await get('/api/1.1/rate', params);
   }
 
   static async sendaction(params: {
-    sessionid: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
+    sessionid?: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
     itemid: string; // id to identify an item on your Website. (e.g. "ID001")
     itemdescription: string; // item description that is displayed when showing recommendations on your Website. (e.g. "the frog")
     itemurl: string; // url that links to the item page on your Website. Note:Please encode &'s in url with %26
@@ -79,18 +96,20 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
+    if (!params.sessionid) params.sessionid = config.sessionid;
     return await get('/api/1.1/sendaction', params);
   }
 
   static async track(params: {
-    sessionid: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
+    sessionid?: string; // session id of a user. (e.g. "F3D4E3BE31EE3FA069F5434DB7EC2E34")
     itemfromid?: string; // id to identify the item currently displayed on your website. (e.g. "ID001") In case there is no specific item displayed on the page (e.g. an overview page where you display rankings) this parameter can be left out.
     itemfromtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     itemtoid: string; // the id of the recommended item that was clicked on
     itemtotype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
-    rectype: string; // either the association type that was used to display the recommendation (e.g. VIEWED_TOGETHER) or one of the following values: RECS_FOR_USER in case the recommended item came from the recommendationsforuser call; RANKING in case the recommended item came from a ranking call (e.g. mostvieweditems); CLUSTER in case the recommended item came from a ranking call (e.g. itemsofcluster); HISTORY in case the recommended item came from the actionhistoryforuser call.
+    rectype: "VIEWED_TOGETHER" | "RANKING" | "CLUSTER" | "HISTORY"; // either the association type that was used to display the recommendation (e.g. VIEWED_TOGETHER) or one of the following values: RECS_FOR_USER in case the recommended item came from the recommendationsforuser call; RANKING in case the recommended item came from a ranking call (e.g. mostvieweditems); CLUSTER in case the recommended item came from a ranking call (e.g. itemsofcluster); HISTORY in case the recommended item came from the actionhistoryforuser call.
     userid?: string; // An optional anonymised id of a user. (e.g. "24EH1723322222A3")
   }) {
+    if (!params.sessionid) params.sessionid = config.sessionid;
     return await get('/api/1.1/json/track', params);
   }
 
@@ -273,20 +292,23 @@ export class EasyrecAPI {
     return await get('/api/1.1/setitemactive', params);
   }
 
-  static async item_types(params: {}={}) {
+  static async item_types(params: {} = {}) {
     return await get('/api/1.0/itemtypes', params);
   }
 
-  static async add_itemtype(params: {}={}) {
+  static async add_itemtype(params: {} = {}) {
     return await get('/api/1.1/additemtype', params);
   }
 
-  static async delete_itemtype(params: {}={}) {
+  static async delete_itemtype(params: {} = {}) {
     return await get('/api/1.1/additemtype', params);
   }
 }
 
-async function get<Ret = any>(uri: string, params: Record<string, string | number>) {
+async function get<Ret = any>(
+  uri: string,
+  params: Record<string, string | number | undefined>
+) {
   params.apikey = config.apikey;
   params.tenantid = config.tenantid;
   return await GET<Ret>(config.serverUrl.trim() + uri.trim(), params);

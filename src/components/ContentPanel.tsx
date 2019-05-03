@@ -1,10 +1,9 @@
 import React, { useRef, useEffect } from 'react';
-import MoshiWebView from './MoshiWebView';
-import markdownToHtml from '@/kit/functions/markdownToHtml';
-import { WebViewProps } from 'react-native';
+import MoshiWebView, { MoshiWebViewProps } from './MoshiWebView';
+import markdownToHtml from '@/kit/functions/markdownToHtml'; 
 import rawHtml from './content.html.raw'
 
-interface Props extends WebViewProps {
+interface Props extends MoshiWebViewProps {
   content: string;
   type: 'html' | 'md';
 }

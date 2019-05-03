@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
   avatar: {
     width: 80,
     height: 80 / 2.5 * 3.5,
-    borderRadius: 20
+    borderRadius: 20,
+    backgroundColor: colors.LightGrey,
   } as ImageStyle,
   info: {
     flex: 1,

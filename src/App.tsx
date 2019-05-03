@@ -106,7 +106,7 @@ export default packToClassComponent(function App() {
           </StoreContext.Provider>
         </ThemeContext.Provider>
       </AntdRNProvider>
-      <FullLoading />
+      {/* <FullLoading /> */}
     </View>
   );
 });
@@ -118,7 +118,6 @@ const transitionConfig = () => ({
 function FullLoading() {
   const [ loading, setLoading ] = useState(true);
  
-
   useEffect(() => {
     const f = (loading: boolean) => setLoading(loading);
     bus.addListener('fullLoading', f);

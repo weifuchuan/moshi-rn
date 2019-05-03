@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 5,
-    marginRight: 8
+    marginRight: 8,
+    backgroundColor: colors.LightGrey,    
   } as ImageStyle
 });

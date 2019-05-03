@@ -17,7 +17,8 @@ import {
   Text,
   View,
   ViewStyle,
-  RefreshControl
+  RefreshControl,
+  ActivityIndicator
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StoreContext } from '@/store';
@@ -25,9 +26,16 @@ import MessagingIcon from '@/components/MessagingIcon';
 
 interface Props {
   title: string;
+  loading?: boolean;
+  onRefresh?: () => Promise<void>;
 }
 
-const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
+const HomeLayout: FunctionComponent<Props> = ({
+  title,
+  loading,
+  onRefresh,
+  children
+}) => {
   const theme = useContext(ThemeContext);
   const store = useContext(StoreContext);
   const floatTop = useAnimatedValue(-40);
@@ -58,9 +66,12 @@ const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
             refreshing={refreshing}
             onRefresh={async () => {
               setRefreshing(true);
-              try {
-                await store.explore();
-              } catch (e) {}
+              // try {
+              //   await store.explore();
+              // } catch (e) {}
+              if (onRefresh) {
+                await onRefresh();
+              }
               setRefreshing(false);
             }}
           />
@@ -119,6 +130,22 @@ const HomeLayout: FunctionComponent<Props> = ({ title, children }) => {
           />
         </Touchable>
       </Animated.View>
+      {loading ? (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            height: '100%',
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            zIndex: 1
+          }}
+        >
+          <ActivityIndicator size="large" color={colors.DoderBlue} />
+        </View>
+      ) : null}
     </View>
   );
 };

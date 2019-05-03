@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { View, StyleSheet, ViewStyle, Text } from 'react-native';
-import { observer } from 'mobx-react-lite';
+import { observer, useObservable } from 'mobx-react-lite';
 import HomeLayout from '@/layouts/HomeLayout';
 import { StoreContext } from '@/store';
 import Course, { ICourse } from '@/models/Course';
@@ -11,6 +11,23 @@ interface Props {}
 const HomeLearn: FunctionComponent<Props> = observer(() => {
   const store = useContext(StoreContext);
 
+  const state = useObservable({
+    loading: false
+  });
+
+  useEffect(
+    () => {
+      (async () => {
+        state.loading = true;
+        try {
+          await store.exploreSubscribedCourseList();
+        } catch (err) {}
+        state.loading = false;
+      })();
+    },
+    [ store.me ]
+  );
+
   let courses: ICourse[] = [];
 
   if (store.exploreData && store.exploreData.subscribedCourseList) {
@@ -18,7 +35,7 @@ const HomeLearn: FunctionComponent<Props> = observer(() => {
   }
 
   return (
-    <HomeLayout title={'我的学习'}>
+    <HomeLayout title={'我的学习'} loading={state.loading} onRefresh={store.exploreSubscribedCourseList} >
       <View style={styles.container}>
         <CoursesPanel
           courses={courses.filter((c) => c.courseType === Course.TYPE.COLUMN)}

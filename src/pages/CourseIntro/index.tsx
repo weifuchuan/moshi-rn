@@ -21,6 +21,7 @@ import ThemeContext from '@/themes';
 import Routes from '@/Routes';
 import { StoreContext } from '@/store';
 import { TextStyle } from 'react-native';
+import {useEasyrecView} from "@/hooks/useEasyrec";
 
 interface Props {
   course: ICourse;
@@ -31,6 +32,8 @@ const CourseIntro: FunctionComponent<
 > = observer(({ course: courseByUpStream }) => {
   const store = useContext(StoreContext);
   const theme = useContext(ThemeContext);
+
+  useEasyrecView(courseByUpStream.id,"course")
 
   const state = useObservable({
     course: CourseModel.from(courseByUpStream)
@@ -137,7 +140,9 @@ const CourseIntro: FunctionComponent<
                   }}
                   style={{
                     width: SCREEN_WIDTH,
-                    height: SCREEN_WIDTH * (1 / 2)
+                    height: SCREEN_WIDTH * (1 / 2),
+                    backgroundColor: colors.LightGrey,
+                    borderRadius: 4
                   }}
                   resizeMode="stretch"
                 />
@@ -149,7 +154,9 @@ const CourseIntro: FunctionComponent<
                     style={[
                       styles.authorInfoAvatar,
                       {
-                        borderColor: theme.colors.亮灰色
+                        borderColor: theme.colors.亮灰色,
+                        backgroundColor: colors.LightGrey,
+                        borderRadius: 4
                       }
                     ]}
                   />

@@ -45,10 +45,10 @@ const Login: FunctionComponent<Props> = () => {
           form.captcha
         );
         store.me = account;
-        store.explore();
+        // store.explore();
         Routes.pop();
-      } catch (err) { 
-        Toast.fail(err.toString());        
+      } catch (err) {
+        Toast.fail(err.toString());
         updateCaptcha();
         dispatch({ type: 'captcha', payload: '' });
       }
@@ -101,7 +101,12 @@ const Login: FunctionComponent<Props> = () => {
           <TouchableOpacity onPress={updateCaptcha}>
             <Image
               source={{ uri: captcha }}
-              style={{ width: 95, height: 31 }}
+              style={{
+                width: 95,
+                height: 31,
+                backgroundColor: colors.LightGrey,
+                borderRadius: 4
+              }}
             />
           </TouchableOpacity>
         }

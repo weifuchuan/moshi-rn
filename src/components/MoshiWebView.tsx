@@ -1,20 +1,17 @@
 import React from 'react';
-import {
-  WebView,
-  WebViewSharedProps,
-  WebViewMessage
-} from 'react-native-webview';
+import { WebView, WebViewProps } from 'react-native-webview';
 import { NativeSyntheticEvent } from 'react-native';
 import { SCREEN_HEIGHT } from '@/kit';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { WebViewMessage } from 'react-native-webview/lib/WebViewTypes';
 
 export interface AnyAction {
   action: string;
   payload: any;
 }
 
-export interface MoshiWebViewProps extends WebViewSharedProps {
+export interface MoshiWebViewProps extends WebViewProps {
   on?: (payload: any) => Promise<any>;
   wvRef?: (instance: WebView | null) => void;
   minBodyHeight?: string;
@@ -51,7 +48,7 @@ export default class MoshiWebView extends React.Component<MoshiWebViewProps> {
       if (this._webview) {
         const id = new Date().toString() + Math.random();
         this.id2resolve.set(id, resolve);
-        this._webview.postMessage(
+        this.postMessage(
           JSON.stringify({
             id,
             payload: data,
@@ -68,9 +65,9 @@ export default class MoshiWebView extends React.Component<MoshiWebViewProps> {
   private onMessage = async (event: NativeSyntheticEvent<WebViewMessage>) => {
     if (event.nativeEvent.data.trim() === 'ready') {
       this.ready = true;
-      this._webview!.postMessage('ready');
+      this.postMessage('ready');
       this.props.minBodyHeight &&
-        this._webview!.postMessage(
+        this.postMessage(
           JSON.stringify({
             action: 'minBodyHeight',
             payload: this.props.minBodyHeight
@@ -91,7 +88,7 @@ export default class MoshiWebView extends React.Component<MoshiWebViewProps> {
       if (!this.props.on) return;
       const result = await this.props.on!(payload);
       result &&
-        this._webview!.postMessage(
+        this.postMessage(
           JSON.stringify({ id, result, type: 1 /* from webview to parent */ })
         );
     } else if (msg.type === 'heightChange') {
@@ -140,4 +137,12 @@ export default class MoshiWebView extends React.Component<MoshiWebViewProps> {
   componentWillUnmount() {
     this.setHeight$.unsubscribe();
   }
+
+  postMessage = (data: string) => {
+    this._webview!.injectJavaScript(
+      `window.document.dispatchEvent(new MessageEvent("message", {data:${JSON.stringify(
+        data
+      )}}))`
+    );
+  };
 }

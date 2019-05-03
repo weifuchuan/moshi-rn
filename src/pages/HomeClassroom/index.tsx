@@ -4,8 +4,8 @@ import HomeLayout from '@/layouts/HomeLayout';
 import Routes from '@/Routes';
 import { StoreContext } from '@/store';
 import ThemeContext from '@/themes';
-import { observer } from 'mobx-react-lite';
-import React, { FunctionComponent, useContext } from 'react';
+import { observer, useObservable } from 'mobx-react-lite';
+import React, { FunctionComponent, useContext, useEffect } from 'react';
 import { ActivityIndicator, StyleSheet, View, ViewStyle } from 'react-native';
 import CoursesPanel from './CoursesPanel';
 
@@ -14,9 +14,29 @@ interface Props {}
 const HomeClassroom: FunctionComponent<Props> = () => {
   const store = useContext(StoreContext);
   const theme = useContext(ThemeContext);
+
+  const state = useObservable({
+    loading: false
+  });
+
+  useEffect(
+    () => {
+      (async () => {
+        state.loading = true;
+        try {
+          await store.exploreHotCourseList();
+        } catch (err) {
+          console.error(err);
+        }
+        state.loading = false;
+      })();
+    },
+    [ store.me ]
+  );
+
   return (
     <View style={styles.container}>
-      <HomeLayout title={'讲堂'}>
+      <HomeLayout title={'讲堂'} loading={state.loading} onRefresh={store.exploreHotCourseList} >
         <Separator />
         <CoursesPanel
           courseType={'专栏课程'}

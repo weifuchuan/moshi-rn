@@ -45,7 +45,7 @@ export default observer(function HomeDrawer() {
                           <Image
                             source={{
                               uri: me.avatar ? me.avatar : defaultRealPicture
-                            }}
+                            }} 
                           />
                         ) as any
                       }

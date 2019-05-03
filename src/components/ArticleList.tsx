@@ -61,7 +61,6 @@ export default observer(function ArticleList({
     <RefreshListView
       data={list}
       renderItem={({ item, index }) => {
-
         return (
           <Touchable onPress={() => Routes.article(item, list)}>
             <View style={styles.item}>
@@ -168,7 +167,9 @@ const styles = StyleSheet.create({
   } as TextStyle,
   coverImage: {
     width: SCREEN_WIDTH - 16,
-    height: (SCREEN_WIDTH - 16) / 1.8
+    height: (SCREEN_WIDTH - 16) / 1.8,
+    backgroundColor: colors.LightGrey,
+    borderRadius: 4
   } as ImageStyle,
   bottomBar: {
     flexDirection: 'row',

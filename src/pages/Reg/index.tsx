@@ -47,8 +47,8 @@ const Reg: FunctionComponent<Props> = () => {
         );
         store.me = account;
         Modal.alert('注册成功！', '请尽快到邮箱激活账号');
-        store.explore();
-        Routes.pop(); 
+        // store.explore();
+        Routes.pop();
       } catch (err) {
         console.warn(err);
         Toast.fail(err.toString());
@@ -115,7 +115,12 @@ const Reg: FunctionComponent<Props> = () => {
           <TouchableOpacity onPress={updateCaptcha}>
             <Image
               source={{ uri: captcha }}
-              style={{ width: 95, height: 31 }}
+              style={{
+                width: 95,
+                height: 31,
+                backgroundColor: colors.LightGrey,
+                borderRadius: 4
+              }}
             />
           </TouchableOpacity>
         }
@@ -141,7 +146,7 @@ const Reg: FunctionComponent<Props> = () => {
       <TouchableOpacity onPress={() => Routes.pop()} style={styles.back}>
         <IconMaterialIcons name="arrow-back" size={30} color="#3a5795" />
       </TouchableOpacity>
-      <Text style={styles.reg} onPress={() => Routes.popAndPush("login")}>
+      <Text style={styles.reg} onPress={() => Routes.popAndPush('login')}>
         登录
       </Text>
     </View>

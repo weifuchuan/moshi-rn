@@ -24,6 +24,7 @@ import { AnyAction } from "../../components/MoshiWebView";
 import html from "./article.html.raw";
 import { Tabs } from "@ant-design/react-native";
 import { patchAvatar } from "@/models/Account";
+import { useEasyrecView } from "@/hooks/useEasyrec";
 
 interface Props {
   article: IArticle;
@@ -39,7 +40,6 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
   const wvRef = useRef<MoshiWebView>(null);
 
   useEffect(() => {
-    ArticleModel.visit(article.id);
     (async () => {
       try {
         state.article = await ArticleModel.fetch(article.id);
@@ -59,7 +59,7 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
             patchAvatar(c);
             c.content = contentHtmls[i];
           });
-        } 
+        }
         wvRef.current!.post<AnyAction>({
           action: "load",
           payload: {
@@ -73,6 +73,9 @@ const Article: FunctionComponent<Props> = observer(({ article, list }) => {
       }
     })();
   }, []);
+
+  useEasyrecView(article.courseId, "course");
+  useEasyrecView(article.id, "article");
 
   let prev: IArticle | undefined = undefined;
   let next: IArticle | undefined = undefined;

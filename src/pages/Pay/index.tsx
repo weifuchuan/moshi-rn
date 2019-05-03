@@ -14,6 +14,7 @@ import {
   StackActions
 } from 'react-navigation';
 import { timer } from 'rxjs';
+import {useEasyrecBuy} from "@/hooks/useEasyrec";
 
 interface Props {
   subscription: ISubscription;
@@ -27,6 +28,8 @@ const Pay: FunctionComponent<
   const state = useObservable({
     status: 'init' as 'init' | 'success' | 'fail' | 'cancel'
   });
+
+  useEasyrecBuy(subscription.refId, "course")
 
   let comp;
   switch (subscription.payWay) {

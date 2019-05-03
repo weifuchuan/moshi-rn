@@ -29,6 +29,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Touchable from '@/components/Touchable';
 import html from './issue-list.html.raw';
+import {useEasyrecView} from "@/hooks/useEasyrec";
 
 interface Props {
   course: ICourse;
@@ -37,7 +38,9 @@ interface Props {
 const Course: FunctionComponent<
   Props
 > = observer(({ course: courseByUpStream }) => {
-  const store = useContext(StoreContext); 
+  const store = useContext(StoreContext);
+
+  useEasyrecView(courseByUpStream.id, "course");
 
   const state = useObservable({
     course: CourseModel.from(toJS(courseByUpStream)),
