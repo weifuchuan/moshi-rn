@@ -1,11 +1,11 @@
 import React, {useContext} from 'react';
 import {autorun, observable} from 'mobx';
 import Account from '@/models/Account';
-import { GET, Ret } from '@/kit/req';
+import { GET, Ret, POST } from '@/kit/req';
 import { ICourse } from '@/models/Course';
 import { retryDo } from '@/kit';
 import { Toast } from '@ant-design/react-native';
-import {initEasyrecConfig} from "@/kit/easyrec";
+import {initEasyrecConfig, EasyrecAPI} from "@/kit/easyrec";
 
 export class Store {
   @observable me: Account | null = null;
@@ -15,11 +15,11 @@ export class Store {
   constructor() {
     (async () => {
       try {
-        const data = await storage.load({
-          key: 'explore'
-        });
-        // console.warn('exploreData',data)
-        if (!this.exploreData) this.exploreData = observable(data);
+        // const data = await storage.load({
+        //   key: 'explore'
+        // });
+        // // console.warn('exploreData',data)
+        // if (!this.exploreData) this.exploreData = observable(data);
       } catch (err) {}
     })();
   }
@@ -47,6 +47,12 @@ export class Store {
     );
     const ret = resp.data;
     this.exploreData.newsList = ret;
+  }
+
+  async exploreRecommendedCourseList(){
+    const idList=await EasyrecAPI.mostvieweditems()
+    const list=await POST<ICourse[]>("/srv/v1/course/simpleCourseListByIdList", idList); 
+    return list;
   }
 
   async exploreSubscribedCourseList() {

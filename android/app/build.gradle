@@ -150,9 +150,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-webview')
     implementation project(':@react-native-community_async-storage')
     implementation project(':rn-fetch-blob')
-    implementation project(':react-native-webview')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-image-crop-picker')
     implementation project(':react-native-fs')

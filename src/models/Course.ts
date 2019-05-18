@@ -10,8 +10,8 @@ export interface ICourse extends _ICourse {
   realPicture?: string;
   subscribed?: boolean;
   personalProfile?: string;
-  publishedCount?:number;
-  learnedCount?:number;
+  publishedCount?: number;
+  learnedCount?: number;
 }
 
 export default class Course implements ICourse {
@@ -58,7 +58,7 @@ export default class Course implements ICourse {
   static async fetch(id: number) {
     const resp = await GET('/srv/v1/course', { id });
     const ret = resp.data;
-    if (ret.state === 'ok') { 
+    if (ret.state === 'ok') {
       return (ret as unknown) as {
         // id, name, introduceImage, publishAt, courseType, lectureCount, buyerCount
         course: ICourse;
@@ -79,6 +79,11 @@ export default class Course implements ICourse {
 
   static async visit(id: number) {
     await GET('/srv/v1/statistics/visit', { id, type: 'course' });
+  }
+
+  static async search(q: string) {
+    const resp = await GET<ICourse[]>('/srv/v1/course/search', { q });
+    return resp.data.map(Course.from);
   }
 
   static from(i: ICourse) {

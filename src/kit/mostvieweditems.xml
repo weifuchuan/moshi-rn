@@ -1,1 +1,87 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?><easyrec><action>mostvieweditems</action><recommendeditems><item><creationDate>2019-04-25 22:16:30.0</creationDate><description>12</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>12</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/12</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:18:03.0</creationDate><description>13</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>13</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/13</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:05:37.0</creationDate><description>6</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>6</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/6</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:05:37.0</creationDate><description>7</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>7</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/7</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:06:26.0</creationDate><description>8</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>8</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/8</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:07:35.0</creationDate><description>9</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>9</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/9</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:14:37.0</creationDate><description>10</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>10</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/10</url><value>10000.0</value></item><item><creationDate>2019-04-25 22:15:36.0</creationDate><description>11</description><imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><id>11</id><itemType>COURSE</itemType><profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/><url>http://moshi.comcourse/11</url><value>10000.0</value></item></recommendeditems><tenantid>moshi</tenantid></easyrec>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<easyrec>
+  <action>mostvieweditems</action>
+  <recommendeditems>
+    <item>
+      <creationDate>2019-04-25 22:16:30.0</creationDate>
+      <description>12</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>12</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/12</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:18:03.0</creationDate>
+      <description>13</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>13</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/13</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:05:37.0</creationDate>
+      <description>6</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>6</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/6</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:05:37.0</creationDate>
+      <description>7</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>7</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/7</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:06:26.0</creationDate>
+      <description>8</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>8</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/8</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:07:35.0</creationDate>
+      <description>9</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>9</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/9</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:14:37.0</creationDate>
+      <description>10</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>10</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/10</url>
+      <value>10000.0</value>
+    </item>
+    <item>
+      <creationDate>2019-04-25 22:15:36.0</creationDate>
+      <description>11</description>
+      <imageUrl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <id>11</id>
+      <itemType>COURSE</itemType>
+      <profileData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+      <url>http://moshi.comcourse/11</url>
+      <value>10000.0</value>
+    </item>
+  </recommendeditems>
+  <tenantid>moshi</tenantid>
+</easyrec>
