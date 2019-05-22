@@ -18,6 +18,10 @@ export interface Ret {
   [key: string]: any;
 }
 
+export function patchUriWithParams(uri: string, params?: any) {
+  return params ? uri + '?' + qs.stringify(params) : uri;
+}
+
 export async function GET<Result = Ret>(
   uri: string,
   params?: any,
@@ -98,6 +102,8 @@ export function upload(
     progress
   };
 }
+
+declare var global:any;
 
 if (__DEV__) {
   (global as any).GET = GET;

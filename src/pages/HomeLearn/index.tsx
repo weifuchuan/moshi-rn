@@ -35,7 +35,11 @@ const HomeLearn: FunctionComponent<Props> = observer(() => {
   }
 
   return (
-    <HomeLayout title={'我的学习'} loading={state.loading} onRefresh={store.exploreSubscribedCourseList} >
+    <HomeLayout
+      title={'我的学习'}
+      loading={state.loading}
+      onRefresh={() => store.exploreSubscribedCourseList()}
+    >
       <View style={styles.container}>
         <CoursesPanel
           courses={courses.filter((c) => c.courseType === Course.TYPE.COLUMN)}

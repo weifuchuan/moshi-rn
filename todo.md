@@ -1,6 +1,0 @@
-- explore page
-  - news
-  - recommended 
-- account drawer menu
-- settings page
-- help page

@@ -1,11 +1,11 @@
-import React, {useContext} from 'react';
-import {autorun, observable} from 'mobx';
+import React, { useContext } from 'react';
+import { autorun, observable } from 'mobx';
 import Account from '@/models/Account';
 import { GET, Ret, POST } from '@/kit/req';
 import { ICourse } from '@/models/Course';
 import { retryDo } from '@/kit';
 import { Toast } from '@ant-design/react-native';
-import {initEasyrecConfig, EasyrecAPI} from "@/kit/easyrec";
+import { initEasyrecConfig, EasyrecAPI } from '@/kit/easyrec';
 
 export class Store {
   @observable me: Account | null = null;
@@ -49,10 +49,13 @@ export class Store {
     this.exploreData.newsList = ret;
   }
 
-  async exploreRecommendedCourseList(){
-    const idList=await EasyrecAPI.mostvieweditems()
-    const list=await POST<ICourse[]>("/srv/v1/course/simpleCourseListByIdList", idList); 
-    return list;
+  async exploreRecommendedCourseList() {
+    const idList = await EasyrecAPI.mostvieweditems();
+    const resp = await POST<ICourse[]>(
+      '/srv/v1/course/simpleCourseListByIdList',
+      idList 
+    );
+    this.exploreData.recommendedCourseList = resp.data;
   }
 
   async exploreSubscribedCourseList() {
@@ -81,15 +84,15 @@ export class Store {
 
 const store = new Store();
 
-export function useStore(){
-  return useContext(StoreContext)
+export function useStore() {
+  return useContext(StoreContext);
 }
 
-autorun(()=>{
-  if (store.me){
-    initEasyrecConfig()
+autorun(() => {
+  if (store.me) {
+    initEasyrecConfig();
   }
-})
+});
 
 Account.probeLoggedAccount()
   .then((account) => {
@@ -111,4 +114,5 @@ export const StoreContext = React.createContext(store);
 
 export default store;
 
-(global as any).store = store;
+declare var global: any;
+global.store = store;

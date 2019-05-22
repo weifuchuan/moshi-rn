@@ -1,7 +1,7 @@
-import { _ICourse } from './_db';
+import { _ICourse, _ICourseType } from './_db';
 import { observable, runInAction } from 'mobx';
 import { Page } from './Page';
-import { POST_FORM, GET } from '@/kit/req';
+import { POST_FORM, GET, POST } from '@/kit/req';
 import { IArticle } from './Article';
 
 export interface ICourse extends _ICourse {
@@ -86,6 +86,19 @@ export default class Course implements ICourse {
     return resp.data.map(Course.from);
   }
 
+  static async allCourseType():Promise<_ICourseType[]>{
+    const resp = await GET<_ICourseType[]>('/srv/v1/course/allCourseType' );
+    return resp.data;
+  }
+
+  static async courseListByIdList(idList:number[]){
+    const resp=await POST<ICourse[]>(
+      '/srv/v1/course/simpleCourseListByIdList',
+      idList 
+    );
+    return resp.data; 
+  }
+
   static from(i: ICourse) {
     const instance = new Course();
     runInAction(() => {
@@ -93,6 +106,8 @@ export default class Course implements ICourse {
     });
     return instance;
   }
+
+  
 
   static readonly TYPE = Object.freeze({
     COLUMN: 1,

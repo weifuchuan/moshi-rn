@@ -36,7 +36,11 @@ const HomeClassroom: FunctionComponent<Props> = () => {
 
   return (
     <View style={styles.container}>
-      <HomeLayout title={'讲堂'} loading={state.loading} onRefresh={store.exploreHotCourseList} >
+      <HomeLayout
+        title={'讲堂'}
+        loading={state.loading}
+        onRefresh={() => store.exploreHotCourseList()}
+      >
         <Separator />
         <CoursesPanel
           courseType={'专栏课程'}

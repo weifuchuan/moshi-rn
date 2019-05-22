@@ -1,107 +1,26 @@
-import React, { FunctionComponent } from 'react';
+import { ICourse, defaultRealPicture } from '@/models/Course';
+import Touchable from './Touchable';
 import {
   View,
-  StyleSheet,
   ViewStyle,
-  Text,
+  StyleSheet,
   Image,
+  Text,
   ImageStyle,
   TextStyle
 } from 'react-native';
-import { observer } from 'mobx-react-lite';
-import { ICourse, defaultRealPicture } from '@/models/Course';
-import { staticBaseUrl } from '@/kit/req';
-import Touchable from '@/components/Touchable';
-import Routes from '@/Routes';
+import React from 'react';
 import isUndefOrNull from '@/kit/functions/isUndefOrNull';
+import Routes from '@/Routes';
 import { patchAvatar } from '@/models/Account';
-import CoursePanelInHome from '@/components/CoursePanelInHome';
 
-interface Props {
-  courses: ICourse[];
-  courseType: string;
-  onViewAll: () => void;
-}
-
-const CoursesPanel: FunctionComponent<Props> = ({
-  courseType,
-  courses,
-  onViewAll
-}) => {
+export default function CoursePanelInHome({ course }: { course: ICourse }) {
+  let avatarUri = course.realPicture || course.avatar || defaultRealPicture;
+  const temp = { avatar: avatarUri };
+  patchAvatar(temp);
+  avatarUri = temp.avatar;
   return (
-    <View style={[ styles.container ]}>
-      <View style={styles.topbar}>
-        <Text style={{ color: '#000', fontSize: 20, fontWeight: 'bold' }}>
-          {courseType}
-        </Text>
-        <Text style={{ fontSize: 14 }} onPress={onViewAll}>
-          查看全部
-        </Text>
-      </View>
-      <View style={styles.list}>
-        {courses.map((course) => {
-          return <CoursePanelInHome key={course.id} course={course} />;
-        })}
-      </View>
-    </View>
-  );
-};
-
-export default observer(CoursesPanel);
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 8,
-    backgroundColor: '#fff'
-  } as ViewStyle,
-  topbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 8
-  } as ViewStyle,
-  list: {} as ViewStyle,
-  item: {
-    paddingVertical: 8,
-    flexDirection: 'row'
-  } as ViewStyle,
-  avatar: {
-    width: 80,
-    height: 80 / 2.5 * 3.5,
-    borderRadius: 20,
-    backgroundColor: colors.LightGrey
-  } as ImageStyle,
-  info: {
-    flex: 1,
-    marginLeft: 8,
-    justifyContent: 'space-evenly'
-  } as ViewStyle,
-  priceBar: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  } as ViewStyle,
-  timeLimit: {
-    color: '#DC143C',
-    fontSize: 10,
-    paddingVertical: 0,
-    paddingHorizontal: 2,
-    borderColor: '#DC143C',
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    borderWidth: 1,
-    borderRadius: 5
-  } as TextStyle,
-  price: {
-    textDecorationLine: 'line-through',
-    color: '#778899',
-    fontSize: 12,
-    marginLeft: 5
-  } as TextStyle
-});
-function renderCourse(course: ICourse, avatarUri: string): JSX.Element {
-  return (
-    <Touchable
-      key={course.id}
+    <Touchable 
       onPress={() => {
         if (course.subscribed) {
           Routes.course(course);
@@ -177,3 +96,53 @@ function renderCourse(course: ICourse, avatarUri: string): JSX.Element {
     </Touchable>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 8,
+    backgroundColor: '#fff'
+  } as ViewStyle,
+  topbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8
+  } as ViewStyle,
+  list: {} as ViewStyle,
+  item: {
+    paddingVertical: 8,
+    flexDirection: 'row'
+  } as ViewStyle,
+  avatar: {
+    width: 80,
+    height: 80 / 2.5 * 3.5,
+    borderRadius: 20,
+    backgroundColor: colors.LightGrey
+  } as ImageStyle,
+  info: {
+    flex: 1,
+    marginLeft: 8,
+    justifyContent: 'space-evenly'
+  } as ViewStyle,
+  priceBar: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  } as ViewStyle,
+  timeLimit: {
+    color: '#DC143C',
+    fontSize: 10,
+    paddingVertical: 0,
+    paddingHorizontal: 2,
+    borderColor: '#DC143C',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    borderWidth: 1,
+    borderRadius: 5
+  } as TextStyle,
+  price: {
+    textDecorationLine: 'line-through',
+    color: '#778899',
+    fontSize: 12,
+    marginLeft: 5
+  } as TextStyle
+});

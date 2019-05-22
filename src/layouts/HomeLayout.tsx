@@ -102,7 +102,7 @@ const HomeLayout: FunctionComponent<Props> = ({
             {title}
           </Text>
           <View style={{ flexDirection: 'row' }}>
-            <MessagingIcon />
+            {/* <MessagingIcon /> */}
             <Touchable
               onPress={() => {
                 Routes.drawerOpen();

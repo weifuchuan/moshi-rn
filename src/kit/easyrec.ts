@@ -1,7 +1,18 @@
-import { GET } from './req';
-import _ from 'lodash';
+import { patchUriWithParams, GET } from './req';
+import _, { flatMap } from 'lodash';
+import { waitUntil } from './functions/waitUntil';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
-const parseString = require('react-native-xml2js/lib/xml2js').parseString;
+// const parseString = require('react-native-xml2js/lib/xml2js').parseString;
+
+var XMLParser = require('react-xml-parser');
+
+interface XMLNode {
+  name: string;
+  attributes: { [key: string]: string };
+  value: string;
+  children: XMLNode[];
+}
 
 interface Config {
   serverUrl: string;
@@ -19,45 +30,62 @@ const config: Config = {
   sessionid: ''
 };
 
+let inited = false;
+
 export async function initEasyrecConfig() {
   const resp = await GET<Config>('/easyrec');
   Object.assign(config, resp.data);
+  inited = true;
 }
 
 // http://easyrec.org/implement
 export class EasyrecAPI {
-  static async mostvieweditems() {
+  static async mostvieweditems(): Promise<number[]> {
     // http://123.207.28.107:9090/easyrec/api/1.1/mostvieweditems?apikey=e9ede1d7cd9422b30a2b500394aa9770&tenantid=moshi&timeRange=ALL&requesteditemtype=COURSE
-    const resp = await GET<string>(
-      config.serverUrl.trim() + '/api/1.1/mostvieweditems',
-      {
-        apikey: config.apikey,
-        tenantid: config.tenantid,
-        timeRange: 'ALL',
-        requesteditemtype: 'COURSE'
-      },
-      { responseType: 'text' }
-    );
-    const xml = resp.data;
-    const data = await new Promise<any>((resolve, reject) => {
-      parseString(xml, { trim: true }, (err: any, data: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+    try {
+      await waitUntil(() => inited);
+      const resp = await get<string>(
+        '/api/1.1/mostvieweditems',
+        {
+          apikey: config.apikey,
+          tenantid: config.tenantid,
+          timeRange: 'ALL',
+          requesteditemtype: 'COURSE'
+        },
+        { responseType: 'text' }
+      );
 
-    const result: string[] = _.uniq(
-      _.flatMap(
-        _.flatMap(data.easyrec.recommendeditems.map((x: any) => x.item)).map(
-          (x: any) => x.id
+      // console.warn('resp', resp);
+
+      const xmlText = resp.data;
+
+      // console.warn('xmlText', xmlText);
+
+      const xml: XMLNode = new XMLParser().parseFromString(xmlText);
+
+      // console.warn('xml', xml);
+
+      const items = flatMap(
+        xml.children
+          .filter((node) => node.name === 'recommendeditems')
+          .map((node) => node.children)
+      );
+
+      const ids = flatMap(
+        items.map((item) =>
+          item.children
+            .filter((x) => x.name === 'id')
+            .map((x) => x.value)
+            .map((id) => Number.parseInt(id))
         )
-      )
-    );
+      );
 
-    return result.map(Number.parseInt);
+      return ids;
+    } catch (e) {
+      console.warn(e);
+      // throw e;
+      return [];
+    }
   }
 
   static async view(params: {
@@ -71,8 +99,11 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
-    if (!params.sessionid) params.sessionid = config.sessionid;
-    return await get('/api/1.1/view', params);
+    try {
+      await waitUntil(() => inited);
+      if (!params.sessionid) params.sessionid = config.sessionid;
+      return await get('/api/1.1/view', params);
+    } catch (e) {}
   }
 
   static async buy(params: {
@@ -86,8 +117,11 @@ export class EasyrecAPI {
     itemtype?: string; // An optional item type that denotes the type of the item (e.g. IMAGE, VIDEO, BOOK, etc.). If not supplied the default value ITEM will be used.
     actioninfo?: string; // an arbitraray valid JSON object with additional information about he action. The JSON string may be up to 500 characters long.
   }) {
-    if (!params.sessionid) params.sessionid = config.sessionid;
-    return await get('/api/1.1/buy', params);
+    try {
+      await waitUntil(() => inited);
+      if (!params.sessionid) params.sessionid = config.sessionid;
+      return await get('/api/1.1/buy', params);
+    } catch (e) {}
   }
 
   static async rate(params: {
@@ -328,296 +362,16 @@ export class EasyrecAPI {
   }
 }
 
-async function get<Ret = any>(
+async function get<Ret>(
   uri: string,
-  params: Record<string, string | number | undefined>
+  params: Record<string, string | number | undefined>,
+  axiosConfig?: AxiosRequestConfig
 ) {
   params.apikey = config.apikey;
   params.tenantid = config.tenantid;
-  return await GET<Ret>(config.serverUrl.trim() + uri.trim(), params);
+  const resp = await axios.get(
+    patchUriWithParams(config.serverUrl + uri, params),
+    axiosConfig
+  );
+  return resp as AxiosResponse<Ret>;
 }
-
-/*
-
-function collect() {
-  let elemList = $('.markdown_content').children().toArray();
-  let apis = [];
-  while (elemList) {
-    elemList = fuck(elemList);
-  }
-  return apis
-    .map((api) => genFunc(api.uri, api.name, api.params))
-    .reduce((p, c) => p + '\n\n' + c, '');
-
-  function fuck(elemList) {
-    let tableIndex = 0;
-    while (true) {
-      if (elemList[tableIndex] && elemList[tableIndex].tagName === 'TABLE') {
-        break;
-      }
-      tableIndex++;
-    }
-    let table = elemList[tableIndex];
-    let action = elemList[tableIndex - 2];
-    action = /\{yourServerURL\}(.+)\??/.exec($(action).text());
-    action = action[1];
-
-    let api = {};
-    api.uri = action;
-
-    api.name = $(
-      elemList.slice(0, tableIndex + 1).find((e) => e && e.tagName === 'H2')
-    ).text().replace(/\W/g,'_');
-
-    api.params = $(table).find('tbody > tr').toArray().filter(tr=>{
-      let c = iterToList(tr.children);
-      if(/(apikey)|(tenantid)/.test(c[0].innerText)){
-        return false;
-      }
-      return true;
-    }).map((tr) => {
-      return iterToList(tr.children).map((td) => td.innerText);
-    });
-
-    apis.push(api);
-    
-    if (elemList.slice(tableIndex + 1).find((e) => e && e.tagName === 'TABLE'))
-      return elemList.slice(tableIndex + 1);
-    else return null;
-  }
-  function iterToList(iter) {
-    const list = [];
-    if (iter instanceof HTMLCollection) {
-      for (let i = 0; i < iter.length; i++) {
-        list.push(iter.item(i));
-      }
-    } else
-      for (let v of iter) {
-        list.push(v);
-      }
-    return list;
-  }
-  function genFunc(uri, name, params) {
-    return `
-    static async ${name}(params: {
-      ${params
-        .map(
-          (param) =>
-            param[0] +
-            (/required/.test(param[1]) ? ': ' : '?: ') +
-            ' string; ' +
-            `// ${param[2].replace(/\W/g, ' ')}`
-        )
-        .reduce((p, c) => p + '\n' + c, '')}
-    }) {
-      return await get('${uri}', params);
-    }
-  `;
-  }
-}
-
-*/
-const _date = {
-  easyrec: {
-    action: [ 'mostvieweditems' ],
-    recommendeditems: [
-      {
-        item: [
-          {
-            creationDate: [ '2019-04-25 22:16:30.0' ],
-            description: [ '12' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '12' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/12' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:18:03.0' ],
-            description: [ '13' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '13' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/13' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:05:37.0' ],
-            description: [ '6' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '6' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/6' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:05:37.0' ],
-            description: [ '7' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '7' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/7' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:06:26.0' ],
-            description: [ '8' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '8' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/8' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-2522:07:35.0' ],
-            description: [ '9' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '9' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/9' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:14:37.0' ],
-            description: [ '10' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '10' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/10' ],
-            value: [ '10000.0' ]
-          },
-          {
-            creationDate: [ '2019-04-25 22:15:36.0' ],
-            description: [ '11' ],
-            imageUrl: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            id: [ '11' ],
-            itemType: [ 'COURSE' ],
-            profileData: [
-              {
-                $: {
-                  'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-                  'xsi:nil': 'true'
-                }
-              }
-            ],
-            url: [ 'http://moshi.comcourse/11' ],
-            value: [ '10000.0' ]
-          }
-        ]
-      }
-    ],
-    tenantid: [ 'moshi' ]
-  }
-};

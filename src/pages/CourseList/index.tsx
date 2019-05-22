@@ -1,4 +1,3 @@
-import RefreshListView, { RefreshStateType } from '@/components/RefreshListView';
 import Touchable from '@/components/Touchable';
 import useAnimatedValue from '@/hooks/useAnimatedValue';
 import useObject from '@/hooks/useObject';
@@ -7,41 +6,55 @@ import BackableLayout from '@/layouts/BackableLayout';
 import Course, { ICourse } from '@/models/Course';
 import ThemeContext from '@/themes';
 import { action, runInAction } from 'mobx';
-import { observer, Observer, useObservable } from 'mobx-react-lite';
-import React, { FunctionComponent, useCallback, useContext, useEffect } from 'react';
-import { Animated, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { observer, Observer, useLocalStore } from 'mobx-react-lite';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useContext,
+  useEffect
+} from 'react';
+import {
+  Animated,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+  ScrollView
+} from 'react-native';
 import Foundation from 'react-native-vector-icons/Foundation';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
-import { RefreshState } from '../../components/RefreshListView';
-import { Page } from '../../models/Page';
+import RefreshListView, { RefreshState } from '@/components/RefreshListView';
+import { Page } from '@/models/Page';
 import CoursePanel from './CoursePanel';
+import { Drawer, SearchBar } from '@ant-design/react-native';
+import { _ICourseType } from '@/models/_db';
+import _ from 'lodash';
+import MultiSelector from './MultiSelector';
 
 interface Props {
   type: 'column' | 'video';
 }
 
 const CourseList: FunctionComponent<Props> = ({ type }) => {
-  const state = useObservable<{
-    refreshState: RefreshStateType;
-    list: ICourse[];
-    type: 'column' | 'video';
-    orderBy: 'publishAt' | 'subscribedCount' | 'price';
-    cending: 'asc' | 'desc';
-    nextPageNumber: number;
-    lastPage: Page<ICourse> | null;
-    headerTop: number;
-    showHeader: boolean;
-  }>({
+  const state = useLocalStore(() => ({
     refreshState: RefreshState.Idle,
-    list: [],
-    type,
-    orderBy: 'publishAt',
-    cending: 'desc',
+    list: [] as ICourse[],
+    type: type as 'column' | 'video',
+    orderBy: 'publishAt' as 'publishAt' | 'subscribedCount' | 'price',
+    cending: 'desc' as 'asc' | 'desc',
     nextPageNumber: 1,
-    lastPage: null,
+    lastPage: null as Page<ICourse> | null,
     headerTop: 0,
-    showHeader: false
-  });
+    showHeader: false,
+    openSearchDrawer: false,
+    searchText: '',
+    searching: false,
+    courseTypeList: [] as _ICourseType[],
+    get courseTypeNameList() {
+      return _.uniq(this.courseTypeList.map((x) => x.typeName));
+    },
+    selectedTypeList: [] as string[]
+  }));
   const theme = useContext(ThemeContext);
   const scrollState = useObject({ offsetY: 0 });
   const animatedHeaderTop = useAnimatedValue(0);
@@ -79,152 +92,395 @@ const CourseList: FunctionComponent<Props> = ({ type }) => {
     });
   }, []);
 
+  const search = useCallback(
+    action(async () => {
+      const q = state.searchText.trim();
+      if (!q) {
+        noSearch();
+        return;
+      }
+      state.refreshState = RefreshState.HeaderRefreshing;
+      state.searching = true;
+      try {
+        const list = await Course.search(q);
+        state.list = list;
+      } catch (e) {
+      } finally {
+        state.refreshState = RefreshState.Idle;
+      }
+    }),
+    []
+  );
+
+  const noSearch = useCallback(
+    action(() => {
+      state.searching = false;
+      state.searchText = '';
+      state.refreshState = RefreshState.HeaderRefreshing;
+      state.nextPageNumber = 1;
+      load();
+    }),
+    []
+  );
+
+  const loadByType = useCallback(async () => {
+    state.openSearchDrawer = false;
+    if (state.selectedTypeList.length === 0) {
+      noSearch();
+      return;
+    }
+    state.refreshState = RefreshState.HeaderRefreshing;
+    state.searching = true;
+    try {
+      const list = await Course.courseListByIdList(
+        _.uniq(
+          state.courseTypeList
+            .filter(
+              (x) =>
+                state.selectedTypeList.findIndex((s) => s === x.typeName) !== -1
+            )
+            .map((x) => x.courseId)
+        )
+      );
+      state.list = list;
+    } catch (e) {
+    } finally {
+      state.refreshState = RefreshState.Idle;
+    }
+  }, []);
+
   useEffect(() => {
     state.refreshState = RefreshState.HeaderRefreshing;
     load();
+    Course.allCourseType().then((list) => {
+      state.courseTypeList = list;
+    });
   }, []);
 
   return (
-    <BackableLayout title={type === 'column' ? '专栏课程' : '视频课程'}>
-      <View style={styles.container}>
-        <RefreshListView
-          data={state.list
-            .filter((x) => !x.subscribed)
-            .concat(...state.list.filter((x) => !!x.subscribed))}
-          renderItem={({ item }) => {
-            return <CoursePanel course={item} />;
-          }}
-          refreshState={state.refreshState}
-          onHeaderRefresh={(rs) => {
-            state.refreshState = rs;
-            state.nextPageNumber = 1;
-            load();
-          }}
-          ListHeaderComponent={buildHeaderComponent(state, load, theme)}
-          keyExtractor={(item) => item.id.toString()}
-          onScroll={(e) => {
-            const y = e.nativeEvent.contentOffset.y;
-            if (y >= 80) {
-              if (y - scrollState.offsetY < 0 && !state.showHeader) {
-                show();
-              }
-            }
-            if (y < 80 || (y - scrollState.offsetY > 0 && state.showHeader)) {
-              state.showHeader = false;
-            }
-            scrollState.offsetY = y;
-          }}
-          onFooterRefresh={(rs) => {
-            state.refreshState = rs;
-            if (state.lastPage && state.lastPage.lastPage) {
-              state.refreshState = RefreshState.NoMoreData;
-            } else {
-              load();
-            }
-          }}
-        />
-        <Observer>
-          {() => (
-            <Animated.View
-              style={[
-                styles.header,
-                {
-                  top: animatedHeaderTop,
-                  position: 'absolute',
-                  left: state.showHeader ? 0 : SCREEN_WIDTH
-                }
-              ]}
+    <Drawer
+      open={state.openSearchDrawer}
+      onOpenChange={(open) => (state.openSearchDrawer = open)}
+      position="right"
+      drawerBackgroundColor={'white'}
+      sidebar={
+        <View style={{ flex: 1 }}>
+          <ScrollView style={{ flex: 1 }}>
+            <MultiSelector
+              options={state.courseTypeNameList}
+              selected={state.selectedTypeList}
+              onChange={(selected) => (state.selectedTypeList = selected)}
+            />
+          </ScrollView>
+          <View style={{ flexDirection: 'row' }}>
+            <Touchable
+              onPress={() => ((state.selectedTypeList = []), loadByType())}
             >
-              <Touchable
-                onPress={action(() => {
-                  state.orderBy = 'publishAt';
-                  state.cending = 'desc';
-                  state.nextPageNumber = 1;
-                  state.refreshState = RefreshState.HeaderRefreshing;
-                  load();
-                })}
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.橙红色,
+                  height: 48
+                }}
               >
-                <View style={styles.headerItem}>
-                  <Text
-                    style={[
-                      { fontSize: 16 },
-                      state.orderBy === 'publishAt'
-                        ? { color: theme.colors.Tomato }
-                        : {}
-                    ]}
-                  >
-                    上新
-                  </Text>
-                </View>
-              </Touchable>
-              <Touchable
-                onPress={action(() => {
-                  state.orderBy = 'subscribedCount';
-                  state.cending = 'desc';
-                  state.nextPageNumber = 1;
-                  state.refreshState = RefreshState.HeaderRefreshing;
-                  load();
-                })}
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    backgroundColor: colors.橙红色,
+                    fontSize: 20
+                  }}
+                >
+                  清空
+                </Text>
+              </View>
+            </Touchable>
+            <Touchable onPress={loadByType}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: colors.森林绿,
+                  height: 48
+                }}
               >
-                <View style={styles.headerItem}>
-                  <Text
-                    style={[
-                      { fontSize: 16 },
-                      state.orderBy === 'subscribedCount'
-                        ? { color: theme.colors.Tomato }
-                        : {}
-                    ]}
-                  >
-                    订阅数
-                  </Text>
-                </View>
-              </Touchable>
-              <Touchable
-                onPress={action(() => {
-                  if (state.orderBy === 'price') {
-                    if (state.cending === 'desc') {
-                      state.cending = 'asc';
-                    } else {
-                      state.cending = 'desc';
-                    }
-                  } else {
-                    state.orderBy = 'price';
-                    state.cending = 'asc';
+                <Text
+                  style={{
+                    color: '#ffffff',
+                    backgroundColor: colors.森林绿,
+                    fontSize: 20
+                  }}
+                >
+                  确定
+                </Text>
+              </View>
+            </Touchable>
+          </View>
+        </View>
+      }
+    >
+      <BackableLayout
+        title={type === 'column' ? '专栏课程' : '视频课程'}
+        right={<Text onPress={() => (state.openSearchDrawer = true)}>分类</Text>}
+      >
+        <View style={styles.container}>
+          <RefreshListView
+            data={state.list
+              .filter((x) => !x.subscribed)
+              .concat(...state.list.filter((x) => !!x.subscribed))}
+            renderItem={({ item }) => {
+              return <CoursePanel course={item} />;
+            }}
+            refreshState={state.refreshState}
+            onHeaderRefresh={(rs) => {
+              if (state.searching) return;
+              state.refreshState = rs;
+              state.nextPageNumber = 1;
+              load();
+            }}
+            ListHeaderComponent={() => {
+              return (
+                <Observer>
+                  {() => (
+                    <View style={{ backgroundColor: '#ffffff' }}>
+                      {state.searching ? null : (
+                        <View style={[ styles.header ]}>
+                          <Touchable
+                            onPress={action(() => {
+                              state.orderBy = 'publishAt';
+                              state.cending = 'desc';
+                              state.nextPageNumber = 1;
+                              state.refreshState =
+                                RefreshState.HeaderRefreshing;
+                              load();
+                            })}
+                          >
+                            <View style={styles.headerItem}>
+                              <Text
+                                style={[
+                                  { fontSize: 16 },
+                                  state.orderBy === 'publishAt'
+                                    ? { color: theme.colors.Tomato }
+                                    : {}
+                                ]}
+                              >
+                                上新
+                              </Text>
+                            </View>
+                          </Touchable>
+                          <Touchable
+                            onPress={action(() => {
+                              state.orderBy = 'subscribedCount';
+                              state.cending = 'desc';
+                              state.nextPageNumber = 1;
+                              state.refreshState =
+                                RefreshState.HeaderRefreshing;
+                              load();
+                            })}
+                          >
+                            <View style={styles.headerItem}>
+                              <Text
+                                style={[
+                                  { fontSize: 16 },
+                                  state.orderBy === 'subscribedCount'
+                                    ? { color: theme.colors.Tomato }
+                                    : {}
+                                ]}
+                              >
+                                订阅数
+                              </Text>
+                            </View>
+                          </Touchable>
+                          <Touchable
+                            onPress={action(() => {
+                              if (state.orderBy === 'price') {
+                                if (state.cending === 'desc') {
+                                  state.cending = 'asc';
+                                } else {
+                                  state.cending = 'desc';
+                                }
+                              } else {
+                                state.orderBy = 'price';
+                                state.cending = 'asc';
+                              }
+                              state.nextPageNumber = 1;
+                              state.refreshState =
+                                RefreshState.HeaderRefreshing;
+                              load();
+                            })}
+                          >
+                            <View style={styles.headerItem}>
+                              <Text
+                                style={[
+                                  { fontSize: 16 },
+                                  state.orderBy === 'price'
+                                    ? { color: theme.colors.Tomato }
+                                    : {}
+                                ]}
+                              >
+                                价格
+                              </Text>
+                              <UpDown
+                                state={
+                                  state.orderBy === 'price' ? state.cending ===
+                                  'asc' ? (
+                                    'up'
+                                  ) : (
+                                    'down'
+                                  ) : (
+                                    undefined
+                                  )
+                                }
+                              />
+                            </View>
+                          </Touchable>
+                        </View>
+                      )}
+                      <View style={{ backgroundColor: '#ffffff' }}>
+                        <SearchBar
+                          style={{ backgroundColor: '#ffffff' }}
+                          onSubmit={search}
+                          value={state.searchText}
+                          onChange={(t) => {
+                            state.searchText = t;
+                          }}
+                          onCancel={noSearch}
+                          onClear={noSearch}
+                        />
+                      </View>
+                    </View>
+                  )}
+                </Observer>
+              );
+            }}
+            keyExtractor={(item) => item.id.toString()}
+            onScroll={(e) => {
+              const y = e.nativeEvent.contentOffset.y;
+              if (y >= 80) {
+                if (y - scrollState.offsetY < 0 && !state.showHeader) {
+                  show();
+                }
+              }
+              if (y < 80 || (y - scrollState.offsetY > 0 && state.showHeader)) {
+                state.showHeader = false;
+              }
+              scrollState.offsetY = y;
+            }}
+            onFooterRefresh={(rs) => {
+              if (state.searching) return;
+              state.refreshState = rs;
+              if (state.lastPage && state.lastPage.lastPage) {
+                state.refreshState = RefreshState.NoMoreData;
+              } else {
+                load();
+              }
+            }}
+          />
+          <Observer>
+            {() => (
+              <Animated.View
+                style={[
+                  styles.header,
+                  {
+                    top: animatedHeaderTop,
+                    position: 'absolute',
+                    left: state.showHeader ? 0 : SCREEN_WIDTH
                   }
-                  state.nextPageNumber = 1;
-                  state.refreshState = RefreshState.HeaderRefreshing;
-                  load();
-                })}
+                ]}
               >
-                <View style={styles.headerItem}>
-                  <Text
-                    style={[
-                      { fontSize: 16 },
-                      state.orderBy === 'price'
-                        ? { color: theme.colors.Tomato }
-                        : {}
-                    ]}
-                  >
-                    价格
-                  </Text>
-                  <UpDown
-                    state={
-                      state.orderBy === 'price' ? state.cending === 'asc' ? (
-                        'up'
-                      ) : (
-                        'down'
-                      ) : (
-                        undefined
-                      )
+                <Touchable
+                  onPress={action(() => {
+                    state.orderBy = 'publishAt';
+                    state.cending = 'desc';
+                    state.nextPageNumber = 1;
+                    state.refreshState = RefreshState.HeaderRefreshing;
+                    load();
+                  })}
+                >
+                  <View style={styles.headerItem}>
+                    <Text
+                      style={[
+                        { fontSize: 16 },
+                        state.orderBy === 'publishAt'
+                          ? { color: theme.colors.Tomato }
+                          : {}
+                      ]}
+                    >
+                      上新
+                    </Text>
+                  </View>
+                </Touchable>
+                <Touchable
+                  onPress={action(() => {
+                    state.orderBy = 'subscribedCount';
+                    state.cending = 'desc';
+                    state.nextPageNumber = 1;
+                    state.refreshState = RefreshState.HeaderRefreshing;
+                    load();
+                  })}
+                >
+                  <View style={styles.headerItem}>
+                    <Text
+                      style={[
+                        { fontSize: 16 },
+                        state.orderBy === 'subscribedCount'
+                          ? { color: theme.colors.Tomato }
+                          : {}
+                      ]}
+                    >
+                      订阅数
+                    </Text>
+                  </View>
+                </Touchable>
+                <Touchable
+                  onPress={action(() => {
+                    if (state.orderBy === 'price') {
+                      if (state.cending === 'desc') {
+                        state.cending = 'asc';
+                      } else {
+                        state.cending = 'desc';
+                      }
+                    } else {
+                      state.orderBy = 'price';
+                      state.cending = 'asc';
                     }
-                  />
-                </View>
-              </Touchable>
-            </Animated.View>
-          )}
-        </Observer>
-      </View>
-    </BackableLayout>
+                    state.nextPageNumber = 1;
+                    state.refreshState = RefreshState.HeaderRefreshing;
+                    load();
+                  })}
+                >
+                  <View style={styles.headerItem}>
+                    <Text
+                      style={[
+                        { fontSize: 16 },
+                        state.orderBy === 'price'
+                          ? { color: theme.colors.Tomato }
+                          : {}
+                      ]}
+                    >
+                      价格
+                    </Text>
+                    <UpDown
+                      state={
+                        state.orderBy === 'price' ? state.cending === 'asc' ? (
+                          'up'
+                        ) : (
+                          'down'
+                        ) : (
+                          undefined
+                        )
+                      }
+                    />
+                  </View>
+                </Touchable>
+              </Animated.View>
+            )}
+          </Observer>
+        </View>
+      </BackableLayout>
+    </Drawer>
   );
 };
 
