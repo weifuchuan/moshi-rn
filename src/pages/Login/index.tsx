@@ -140,7 +140,7 @@ const Login: FunctionComponent<Props> = () => {
       <TouchableOpacity onPress={() => Routes.pop()} style={styles.back}>
         <IconMaterialIcons name="arrow-back" size={30} color="#3a5795" />
       </TouchableOpacity>
-      <Text style={styles.reg} onPress={() => Routes.popAndPush('reg')}>
+      <Text style={styles.reg} onPress={() => Routes.reg()}>
         注册
       </Text>
     </View>

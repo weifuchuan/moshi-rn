@@ -146,7 +146,7 @@ const Reg: FunctionComponent<Props> = () => {
       <TouchableOpacity onPress={() => Routes.pop()} style={styles.back}>
         <IconMaterialIcons name="arrow-back" size={30} color="#3a5795" />
       </TouchableOpacity>
-      <Text style={styles.reg} onPress={() => Routes.popAndPush('login')}>
+      <Text style={styles.reg} onPress={() => Routes.login()}>
         登录
       </Text>
     </View>
